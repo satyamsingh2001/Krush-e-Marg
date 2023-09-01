@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "353838495688",
+    "project_id": "krushemarg",
+    "storage_bucket": "krushemarg.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:353838495688:android:8b326ee2fbe240f26ef2fd",
+        "android_client_info": {
+          "package_name": "com.arjh.krusemarg"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "353838495688-60gluf40bu6jusun663p229lk6j8ufsh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBApXXsQ4d4yghpzhbnG6ETW5Oi1xMj90"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "353838495688-60gluf40bu6jusun663p229lk6j8ufsh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
