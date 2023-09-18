@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:razorpay_flutter_31/razorpay_flutter_31.dart';
 
 import '../../../database/database_helper2.dart';
 import '../widgets/success_alert.dart';

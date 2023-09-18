@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:razorpay_flutter_31/razorpay_flutter_31.dart';
 
 import '../../../colors/colors_const.dart';
 import '../../../textstyles/textstyle_const.dart';
