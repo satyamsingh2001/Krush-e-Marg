@@ -1,20 +1,15 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:story_view/story_view.dart';
-import 'package:http/http.dart'as http;
 import '../../colors/colors_const.dart';
-import '../../const/api_string.dart';
-import '../shops/views/store_details.dart';
 
 class StoriesDetails extends StatefulWidget {
-  final String storeId;
-  const StoriesDetails({super.key, required this.storeId});
+  final List? sendStory;
+  const StoriesDetails({super.key, this.sendStory});
   @override
-  _MoreStoriesState createState() => _MoreStoriesState();
+  _StoriesDetailsState createState() => _StoriesDetailsState();
 }
 
-class _MoreStoriesState extends State<StoriesDetails> {
+class _StoriesDetailsState extends State<StoriesDetails> {
   final storyController = StoryController();
 
   bool _loading =true;
@@ -22,31 +17,41 @@ class _MoreStoriesState extends State<StoriesDetails> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    storeid = widget.storeId;
-    _fetchStory();
-  }
-
-  String storeid='';
-  List fetchStory = [];
-  Future<void> _fetchStory() async {
-    final response = await http.get(
-        Uri.parse('$storyUrl+$storeid'));
-    fetchStory = jsonDecode(response.body)['story'];
-
+    fetchStory=widget.sendStory!;
     for(int i=0;i<fetchStory.length;i++){
       var fetchImgVideo = fetchStory[i]['image_video_url'];
       var storyType = fetchStory[i]['type'];
-      setState(() {
-        images.add(fetchImgVideo);
-        mediaType.add(storyType);
-      });
+      images.add(fetchImgVideo);
+      mediaType.add(storyType);
     }
-    if (response.statusCode == 200) {
+    // print(widget.sendStory);
+    if(fetchStory.isNotEmpty){
       _loading = false;
-    } else {
-      throw Exception('Failed to load categories');
     }
+    setState(() {
+    });
   }
+
+  List fetchStory = [];
+  // Future<void> _fetchStory() async {
+  //   final response = await http.get(
+  //       Uri.parse('$storyUrl+$storeid'));
+  //   fetchStory = jsonDecode(response.body)['story'];
+  //
+  //   for(int i=0;i<fetchStory.length;i++){
+  //     var fetchImgVideo = fetchStory[i]['image_video_url'];
+  //     var storyType = fetchStory[i]['type'];
+  //     setState(() {
+  //       images.add(fetchImgVideo);
+  //       mediaType.add(storyType);
+  //     });
+  //   }
+  //   if (response.statusCode == 200) {
+  //     _loading = false;
+  //   } else {
+  //     throw Exception('Failed to load categories');
+  //   }
+  // }
 
   List mediaType = [];
   List images = [];
@@ -74,21 +79,21 @@ class _MoreStoriesState extends State<StoriesDetails> {
         ],
       ),
     ):Scaffold(
-      floatingActionButton: SizedBox(
-        height: 40,
-        width: size.width*0.9,
-        child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary700,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20))),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  fullscreenDialog: true,
-                  builder: (context) => StoreDetails(storeID: widget.storeId,)));
-            },
-            child: const Text('Visit store')),
-      ),
+      // floatingActionButton: SizedBox(
+      //   height: 40,
+      //   width: size.width*0.9,
+      //   child: ElevatedButton(
+      //       style: ElevatedButton.styleFrom(
+      //           backgroundColor: AppColors.primary700,
+      //           shape: RoundedRectangleBorder(
+      //               borderRadius: BorderRadius.circular(20))),
+      //       onPressed: () {
+      //         Navigator.of(context).push(MaterialPageRoute(
+      //             fullscreenDialog: true,
+      //             builder: (context) => StoreDetails(storeID: widget.storeId,)));
+      //       },
+      //       child: const Text('Visit store')),
+      // ),
       body: StoryView(
         storyItems: [
           for(int i=0;i<mediaType.length;i++)

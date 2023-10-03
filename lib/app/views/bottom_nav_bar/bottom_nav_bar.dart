@@ -1,9 +1,17 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:krush_e_marg/app/textstyles/textstyle_const.dart';
 import 'package:krush_e_marg/app/views/bottom_nav_bar/product/product_page.dart';
+import 'package:krush_e_marg/app/views/bottom_nav_bar/reels/reels_page.dart';
 import 'package:krush_e_marg/app/views/bottom_nav_bar/views/home_page.dart';
 import '../../colors/colors_const.dart';
-import '../shops/views/shope_page.dart';
+import '../../controller/api_controller.dart';
+import '../../controller/product_db_controller.dart';
+import 'community/community.dart';
+import 'community/controller/api.dart';
+import 'community/controller/toggle_controller.dart';
+import 'community/controller/update_ls_controller.dart';
+import 'shops/views/shope_page.dart';
 
 class DashBoardScreenMain extends StatefulWidget {
   final int? currentIndex;
@@ -14,33 +22,41 @@ class DashBoardScreenMain extends StatefulWidget {
 }
 
 class _DashBoardScreenMainState extends State<DashBoardScreenMain> {
+  final CommunityController communityController = Get.put(CommunityController());
+  final CategoriesController categoriesController = Get.put(CategoriesController());
+  final ProductController productController = Get.put(ProductController());
 
-  late int _currentIndex;
+  final UpdateLSController updateLSController = Get.put(UpdateLSController());
+  final ToggleController toggleController = Get.put(ToggleController());
+  late int currentIndex;
 
-  List<Widget> _screens = [];
 
   @override
   void initState() {
     super.initState();
-    _screens = [
-      const HomePage(),
-      // const ViewAllOffers(),
-      const ShopPage(),
-      const BottomProductPage()
-      // CourierScreen(),
-      // const YourOrder(),
-      // const ProfileScreen(),
-    ];
-    _currentIndex = widget.currentIndex??0;
+    currentIndex = widget.currentIndex??0;
   }
+ List screens = [
+  const HomePage(),
+  const ShopPage(),
+  const BottomProductPage(),
+  const Community(),
+  const Reels(),
 
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens,
-      ),
+      floatingActionButton: currentIndex<3?FloatingActionButton(
+        onPressed: () {
+         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const DashBoardScreenMain(currentIndex: 3,)));
+        },
+        backgroundColor: AppColors.primary,
+        child: Text("Sell",style: AppTextStyles.kBody15SemiboldTextStyle.copyWith(color: AppColors.white),),)
+          :null,
+      floatingActionButtonLocation:currentIndex==0? FloatingActionButtonLocation.endFloat:null, // Change this to the desired location.
+
+      body: screens[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: AppColors.primary,
         showSelectedLabels: true,
@@ -55,29 +71,18 @@ class _DashBoardScreenMainState extends State<DashBoardScreenMain> {
         selectedIconTheme: const IconThemeData(
           color: AppColors.primary,
         ),
-        currentIndex: _currentIndex,
+        currentIndex: currentIndex,
         onTap: (index) {
           setState(() {
-            _currentIndex = index;
+            currentIndex = index;
           });
-          // if (index == 3) {
-          //   showDialog(
-          //     context: context,
-          //     builder: (BuildContext context) {
-          //       return const CourierOnbordingAlert();
-          //     },
-          //   );
-          // }
         },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_rounded),
             label: 'Home',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.discount),
-          //   label: 'Offers',
-          // ),
+        
           BottomNavigationBarItem(
             icon: Icon(Icons.shopify_rounded),
             label: 'Shops',
@@ -87,14 +92,14 @@ class _DashBoardScreenMainState extends State<DashBoardScreenMain> {
             icon: Icon(Icons.redeem),
             label: 'Product',
           ),
-          // BottomNavigationBarItem(
-          //   icon:Icon(Icons.wallet_giftcard_outlined),
-          //   label: 'Orders',
-          // ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(CupertinoIcons.person_crop_circle),
-          //   label: 'Profile',
-          // ),
+          BottomNavigationBarItem(
+            icon:Icon(Icons.groups),
+            label: 'Community',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.video_collection_outlined),
+            label: 'Reels',
+          ),
         ],
       ),
     );

@@ -9,8 +9,8 @@ class ConstantContainer extends StatelessWidget {
   final Color? color;
   final Color? shadowColor;
   final Widget? child;
-  final double ?blurradius;
-  final double ?spreadradius;
+  final double ?blurRadius;
+  final double ?spreadRadius;
   final Offset ?offset;
   const ConstantContainer({
     Key? key,
@@ -21,12 +21,13 @@ class ConstantContainer extends StatelessWidget {
     this.color,
     this.child,
     this.borderColor,
-    this.shadowColor, this.blurradius, this.offset, this.spreadradius,
+    this.shadowColor, this.blurRadius, this.offset, this.spreadRadius,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.all(8),
         height: height,
         width: width,
         decoration: BoxDecoration(
@@ -34,8 +35,8 @@ class ConstantContainer extends StatelessWidget {
             boxShadow: [
               BoxShadow(
                 color: shadowColor?? Colors.transparent,
-                blurRadius: blurradius??1.0,
-                spreadRadius: spreadradius??0,
+                blurRadius: blurRadius??1.0,
+                spreadRadius: spreadRadius??0,
                 offset: offset??Offset.zero,
               ),
             ],

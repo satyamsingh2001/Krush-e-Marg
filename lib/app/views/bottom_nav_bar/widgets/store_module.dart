@@ -1,15 +1,9 @@
-import 'dart:convert';
-import 'package:get/get.dart';
-import 'package:http/http.dart'as http;
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
 
 import '../../../colors/colors_const.dart';
-import '../../../const/api_string.dart';
 import '../../../controller/api_controller.dart';
 import '../../../textstyles/textstyle_const.dart';
-import '../../shops/views/store_details.dart';
-import '../../shops/views/store_list.dart';
 import 'explore_modules_widget.dart';
 class StoreModule extends StatefulWidget {
   const StoreModule({Key? key}) : super(key: key);
@@ -77,7 +71,7 @@ class _StoreModuleState extends State<StoreModule> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Get.to(StoreList(ModuleId: module['id'].toString()));
+                          // Get.to(StoreList(ModuleId: module['id'].toString()));
                         },
                         child: Text(
                           'View All',
@@ -100,9 +94,9 @@ class _StoreModuleState extends State<StoreModule> {
                         String timeType = store['timeType']=='minutes'?'min':'hr';
                         return GestureDetector(
                           onTap: (){
-                            Get.to(StoreDetails(
-                              storeID: store['id'].toString(),
-                            ));
+                            // Get.to(StoreDetails(
+                            //   storeID: store['id'].toString(),
+                            // ));
                           },
                           child: ExploreModulesWidgets(
                             image: store['cover_url'].toString(),

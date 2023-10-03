@@ -5,9 +5,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:krush_e_marg/test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'app/services/notification_services.dart';
 import 'app/splash/splash_screen.dart';
+import 'app/views/bottom_nav_bar/bottom_nav_bar.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -65,7 +67,15 @@ void main() async {
 
   final prefs = await SharedPreferences.getInstance();
   final userId = prefs.getString("userId");
-  runApp(MyApp(userId: userId));
+  final type = prefs.getString("type");
+  final barrierToken = prefs.getString("barrierToken");
+  print(userId);
+  print("userId");
+  // print(type);
+  // print(barrierToken);
+  // print("Satyam");
+
+  runApp(MyApp(userId: userId,type: type,barrierToken: barrierToken));
 }
 
 class MyApp extends StatelessWidget {
@@ -73,14 +83,18 @@ class MyApp extends StatelessWidget {
   GlobalKey<NavigatorState>();
 
   final String? userId;
-  const MyApp({super.key, this.userId});
+  final String? type;
+  final String? barrierToken;
+  const MyApp({super.key, this.userId, this.type, this.barrierToken});
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
+      // home: const AddProduct(),
       home: const SplashScreen(),
+      // home: const DashBoardScreenMain(),
     );
   }
 }

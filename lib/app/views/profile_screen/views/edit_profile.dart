@@ -48,7 +48,7 @@ class _EditProfileState extends State<EditProfile> {
     final prefs = await SharedPreferences.getInstance();
     final userid=prefs.getString("userId");
 
-    final url = "$updateProfile+$userid"; // Replace with your server endpoint URL
+    final url = "updateProfile+$userid"; // Replace with your server endpoint URL
 
     // Create multipart request for POST
     var request = http.MultipartRequest('POST', Uri.parse(url));

@@ -16,20 +16,19 @@ class Product {
   final String? productId;
   final String? storeId;
 
-  Product({
-    this.id,
-    this.name,
-    this.price,
-    this.mrp,
-    this.quantity,
-    this.storeName,
-    this.imageUrl,
-    this.attribute,
-    this.unit,
-    this.size,
-    this.productId,
-    this.storeId
-  });
+  Product(
+      {this.id,
+      this.name,
+      this.price,
+      this.mrp,
+      this.quantity,
+      this.storeName,
+      this.imageUrl,
+      this.attribute,
+      this.unit,
+      this.size,
+      this.productId,
+      this.storeId});
 
   Map<String, dynamic> toMap() {
     return {
@@ -50,17 +49,16 @@ class Product {
 
   Map<String, dynamic> toMapForApi() {
     return {
-      "product_name":name,
-      "product_id":productId,
-      "price":price,
-      "quantity":quantity,
-      "attribute":attribute,
-      "unit":unit,
-      "size":size
+      "product_name": name,
+      "product_id": productId,
+      "price": price,
+      "quantity": quantity,
+      "attribute": attribute,
+      "unit": unit,
+      "size": size
       // Add other desired parameters here...
     };
   }
-
 }
 
 class ProductDatabase {
@@ -106,14 +104,16 @@ class ProductDatabase {
     final db = await instance.database;
     return await db.insert('products', product.toMap());
   }
+
   //
-  Future<int> updateProductSizeByProductId(String productId,int size, int newQuantity) async {
+  Future<int> updateProductSizeByProductId(
+      String productId, int size, int newQuantity) async {
     final db = await instance.database;
     return await db.update(
       'products',
       {'quantity': newQuantity},
       where: 'productId = ? AND size = ?',
-      whereArgs: [productId,size],
+      whereArgs: [productId, size],
     );
   }
 
@@ -164,8 +164,7 @@ void addProductToDatabase(
     final String storeid,
     final String Unit,
     final int Quantity,
-    final String Attribute
-    )async {
+    final String Attribute) async {
   final product = Product(
     name: name,
     price: price,
@@ -183,18 +182,15 @@ void addProductToDatabase(
   print('Product added with ID: $result');
 }
 
-void updateProduct(
-    String priductID,
-    int productSize,
-    int quant
-    )async{
+void updateProduct(String priductID, int productSize, int quant) async {
   final productId = priductID; // Name of the product you want to update
   final size = productSize;
   final newQuantity = quant; // The new size value
-  await ProductDatabase.instance.updateProductSizeByProductId(productId,size, newQuantity);
+  await ProductDatabase.instance
+      .updateProductSizeByProductId(productId, size, newQuantity);
 }
 
-void fetchProducts()async{
+void fetchProducts() async {
   final productList = await ProductDatabase.instance.fetchProducts();
   for (final product in productList) {
     // print('Product ID: ${product.id}, Name: ${product.name}, Price: ${product.price}');
@@ -214,53 +210,59 @@ void deleteProduct() async {
   await ProductDatabase.instance.clearProducts();
 }
 
-class DataBase extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () async {
-                  final product = Product(
-                    name: 'Example Product',
-                    price: 10.99,
-                    mrp: 10,
-                    imageUrl: 'https://example.com/product-image.jpg',
-                  );
-                  final result = await ProductDatabase.instance.addProduct(product);
-                  print('Product added with ID: $result');
-                },
-                child: Text('Add Product'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  final productId = 1; // Provide the ID of the product to remove
-                  final result = await ProductDatabase.instance.removeProduct(productId);
-                  print('Product removed: $result');
-                },
-                child: Text('Remove Product'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  final productList = await ProductDatabase.instance.fetchProducts();
-                  for (final product in productList) {
-                    print('Product ID: ${product.id}, Name: ${product.name}, Price: ${product.price}');
-                    print('name: ${product.name}, storeName: ${product.storeName}, Image URL: ${product.imageUrl}');
-                    print('price: ${product.price}, mrp: ${product.mrp}');
-                    print(productList.length.toString()+'------------------------------------------------');
-                  }
-                },
-                child: Text('Fetch Products'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
+// class DataBase extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       home: Scaffold(
+//         body: Center(
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: [
+//               ElevatedButton(
+//                 onPressed: () async {
+//                   final product = Product(
+//                     name: 'Example Product',
+//                     price: 10.99,
+//                     mrp: 10,
+//                     imageUrl: 'https://example.com/product-image.jpg',
+//                   );
+//                   final result =
+//                       await ProductDatabase.instance.addProduct(product);
+//                   print('Product added with ID: $result');
+//                 },
+//                 child: Text('Add Product'),
+//               ),
+//               ElevatedButton(
+//                 onPressed: () async {
+//                   final productId =
+//                       1; // Provide the ID of the product to remove
+//                   final result =
+//                       await ProductDatabase.instance.removeProduct(productId);
+//                   print('Product removed: $result');
+//                 },
+//                 child: Text('Remove Product'),
+//               ),
+//               ElevatedButton(
+//                 onPressed: () async {
+//                   final productList =
+//                       await ProductDatabase.instance.fetchProducts();
+//                   for (final product in productList) {
+//                     print(
+//                         'Product ID: ${product.id}, Name: ${product.name}, Price: ${product.price}');
+//                     print(
+//                         'name: ${product.name}, storeName: ${product.storeName}, Image URL: ${product.imageUrl}');
+//                     print('price: ${product.price}, mrp: ${product.mrp}');
+//                     print(productList.length.toString() +
+//                         '------------------------------------------------');
+//                   }
+//                 },
+//                 child: Text('Fetch Products'),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

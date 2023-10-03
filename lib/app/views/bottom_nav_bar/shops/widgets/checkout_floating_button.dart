@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../colors/colors_const.dart';
-import '../../../database/database_helper2.dart';
-import '../../../textstyles/textstyle_const.dart';
-import '../../CheckoutScreen/views/checkout_screen.dart';
+import '../../../../colors/colors_const.dart';
+import '../../../../database/database_helper2.dart';
+import '../../../../textstyles/textstyle_const.dart';
+import '../../../CheckoutScreen/views/checkout_screen.dart';
+
+
 
 class CheckoutFloatingButton extends StatefulWidget {
   const CheckoutFloatingButton({Key? key}) : super(key: key);

@@ -8,7 +8,7 @@ import '../../../const/api_string.dart';
 import '../../../database/database_helper2.dart';
 import '../controller/payment_controller.dart';
 
-PaymentController paymentController = Get.find();
+// PaymentController paymentController = Get.find();
 
 List<Map<String, dynamic>> productListForApi = [];
 
@@ -66,9 +66,9 @@ Future<void> sendCartToApi(
 
     if (data['status'] == 1) {
       if (paymentMethod == 'online') {
-        paymentController.openPaymentPortal(data['paymentOption']);
+        // paymentController.openPaymentPortal(data['paymentOption']);
       } else {
-        paymentController.showSuccessDialog();
+        // paymentController.showSuccessDialog();
         deleteProduct();
       }
       if (kDebugMode) {

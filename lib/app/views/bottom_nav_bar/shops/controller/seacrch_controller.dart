@@ -1,9 +1,9 @@
 import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:http/http.dart'as http;
-import '../../../const/api_string.dart';
-import '../../../controller/api_controller.dart';
+
+import '../../../../const/api_string.dart';
+import '../../../../controller/api_controller.dart';
 
 class SearchController extends GetxController{
   List modulesName = [];

@@ -1,11 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
-import 'package:krush_e_marg/app/textstyles/textstyle_const.dart';
 import 'package:krush_e_marg/app/auth/widgets/sign_signup_button_widget.dart';
+import 'package:krush_e_marg/app/textstyles/textstyle_const.dart';
+
 import '../colors/colors_const.dart';
-import 'controller/auth_controller.dart';
 import 'login_with_gmail.dart';
 import 'otp_verification.dart';
 

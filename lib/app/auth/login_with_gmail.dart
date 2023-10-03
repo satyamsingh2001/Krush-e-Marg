@@ -1,16 +1,15 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../colors/colors_const.dart';
 import '../const/api_string.dart';
 import '../textstyles/textstyle_const.dart';
 import '../views/bottom_nav_bar/bottom_nav_bar.dart';
-import 'map_page.dart';
 
 class LoginWithGmail extends StatefulWidget {
   final bool loading;
@@ -71,39 +70,40 @@ class _LoginWithGmailState extends State<LoginWithGmail> {
     );
   }
 
-  registerUser(String type,String email,String? name,) async {
+  registerUser(String type, String email, String? name) async {
     final response = await http.post(
-      Uri.parse("$baseurl/api/signup"),
+      Uri.parse("$baseurl/api/user/signup"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
         "login_type": type,
         "email_phone": email,
-        "name": name!,
-      }),
+        "name": name!
+      }
+      ),
     );
     var data = jsonDecode(response.body);
- if (response.statusCode == 200) {
-      var userid = data["data"]["id"];
+    if (response.statusCode == 200) {
       final prefs = await SharedPreferences.getInstance();
-      const key = 'userId';
-      final userId = userid.toString();
-      prefs.setString(key, userId);
+      final userId =  data["data"]["id"].toString();
+      final type =  data["data"]["user_role"].toString();
+      final token =  data["data"]["token"].toString();
+
+
+      prefs.setString('userId', userId);
+      prefs.setString('type', type);
+      prefs.setString('barrierToken', token);
       Get.offAll(const DashBoardScreenMain());
-      // Navigator.push(
-      //     context, MaterialPageRoute(builder: (context) => const MapPage()));
-      setState(() {
-        _isLoading = false;
-      });
+      // Navigator.pushAndRemoveUntil(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => const MapPage()),
+      //         (route) => false);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select one gmail account'),
-        ),
-      );
+      // print('wrong otp');
     }
   }
+
 
   bool _isLoading = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;

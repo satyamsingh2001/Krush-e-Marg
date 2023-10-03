@@ -13,20 +13,28 @@ Future<List<String>> loadStrings() async {
   return strings ?? [];
 }
 
-class BannerController extends GetxController {
-  RxList banner = [].obs;
-  Future<void> fetchBanner() async {
-    List<String> storedStrings = await loadStrings();
-    // String lat = storedStrings[0].toString();
-    // String long = storedStrings[1].toString();
-    String lat = '26.8467';
-    String long = '80.9462';
-
-    final response = await http.get(Uri.parse('$bannerUrl+$lat,$long'));
-    banner.value = jsonDecode(response.body);
-    update();
-  }
-}
+// class BannerController extends GetxController {
+//   RxList categories = [].obs;
+//   Future<void> fetchBanner() async {
+//     final prefs = await SharedPreferences.getInstance();
+//     final brearToken = prefs.getString("barrierToken");
+//     // final id = prefs.getString("id");
+//
+//     final response = await http.get(Uri.parse(bannerUrl), headers: {
+//       'Content-Type': 'application/json',
+//       'Accept': 'application/json',
+//       'Authorization': 'Bearer $brearToken',
+//     });
+//
+//     var suraj = jsonDecode(response.body);
+//     if (response.statusCode == 200) {
+//       categories.value = suraj['data'];
+//       update();
+//     } else {
+//       throw Exception('Failed to load categories');
+//     }
+//   }
+// }
 
 class AdminOfferController extends GetxController {
   RxBool loading = true.obs;
@@ -53,52 +61,58 @@ class AdminOfferController extends GetxController {
 }
 
 class CategoriesController extends GetxController {
-  List<Map<String, dynamic>> categoryNames = [];
-  Future<void> fetchCategories() async {
-    List<String> storedStrings = await loadStrings();
-    // String lat = storedStrings[0].toString();
-    // String long = storedStrings[1].toString();
-    String lat = '26.8467';
-    String long = '80.9462';
+  List categoriesList = [];
+  Future<void> fetchCat() async {
+    final prefs = await SharedPreferences.getInstance();
+    final brearToken = prefs.getString("barrierToken");
+    // final id = prefs.getString("id");
 
-    final response = await http.get(Uri.parse('$categoryUrl+$lat,$long'));
-    categoryNames = List<Map<String, dynamic>>.from(jsonDecode(response.body));
-    update();
+    final response = await http.get(Uri.parse(categoryUrl), headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $brearToken',
+    });
+
+    var data = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      categoriesList = data['data'];
+      // print(data);
+      // print(brearToken);
+      // print("sssssssssssssssssssssssssssssssssssssss");
+      update();
+    } else {
+      throw Exception('Failed to load categories');
+    }
   }
 }
 
-class ProductController extends GetxController {
-  List<Product> productList = [];
-  late Timer _updateTimer;
+class SubCatController extends GetxController {
+  RxList subCatList = [].obs;
+  RxList selectedIndex = [].obs;
+  Future<void> fetchSubCat(catId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final brearToken = prefs.getString("barrierToken");
+    // final id = prefs.getString("id");
 
-  @override
-  void onInit() {
-    super.onInit();
-    startUpdating();
-  }
-
-  void startUpdating() {
-    _updateTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      fetchProducts(); // Call fetchProducts() every second
-      // print('updated');
+    final response = await http.get(Uri.parse('$subCatUrl$catId'), headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $brearToken',
     });
-  }
 
-  void fetchProducts() async {
-    final products = await ProductDatabase.instance.fetchProducts();
-    if (productList.isEmpty) {
-      productList = products;
+    var data = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      subCatList.value = data['data'];
+      selectedIndex =
+          RxList.generate(subCatList.length, (index) => false);
+      selectedIndex[0] = true;
+      // print(data);
+      // print(brearToken);
+      // print("sssssssssssssssssssssssssssssssssssssss");
+      update();
     } else {
-      productList.clear();
-      productList = products;
+      throw Exception('Failed to load categories');
     }
-    update();
-  }
-
-  @override
-  void onClose() {
-    _updateTimer.cancel();
-    super.onClose();
   }
 }
 
@@ -111,8 +125,14 @@ class AddressController extends GetxController {
   Future<void> fetchSavedAddress() async {
     isLoading.value = false;
     final prefs = await SharedPreferences.getInstance();
-    final userid = prefs.getString("userId");
-    final response = await http.get(Uri.parse('$baseurl/api/address/$userid'));
+    final brearToken = prefs.getString("barrierToken");
+    final id = prefs.getString("userId");
+    final response = await http.get(Uri.parse('$baseurl/api/user/address/$id'),
+    headers: {
+      'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $brearToken',
+    });
 
     fetchAddress = jsonDecode(response.body)['data'];
     address =
@@ -129,20 +149,34 @@ class AddressController extends GetxController {
 
 class StoryController extends GetxController {
   List seenStory = [];
-  List fetchStoryStore = [];
-  Future<void> fetchStore() async {
-    List<String> storedStrings = await loadStrings();
-    // String lat = storedStrings[0].toString();
-    // String long = storedStrings[1].toString();
-    String lat = '26.8467';
-    String long = '80.9462';
+  List storeList = [];
 
-    final response = await http.get(
-        Uri.parse('$storiesStoreurl+$lat,$long'));
-    fetchStoryStore = jsonDecode(response.body)['storyStores'];
-    seenStory = List.generate(fetchStoryStore.length, (index) => false);
-    update();
+  Future<void> fetchStory() async {
+    final prefs = await SharedPreferences.getInstance();
+    final brearToken = prefs.getString("barrierToken");
+    // final id = prefs.getString("id");
+
+    final response = await http.get(Uri.parse(storyUrl), headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $brearToken',
+    });
+
+    var data = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      // storeList = data;
+      for(int i=0; i<data.length;i++){
+        if(data[i]['story'] != null){
+          storeList=data;
+        }
+      }
+
+      update();
+    } else {
+      throw Exception('Failed to load categories');
+    }
   }
+
 }
 
 class ModuleController extends GetxController {
@@ -163,3 +197,84 @@ class ModuleController extends GetxController {
     }
   }
 }
+
+
+class UpdateController extends GetxController {
+  Map updateList = {};
+  Future<void> fetchUpdates() async {
+    final prefs = await SharedPreferences.getInstance();
+    final brearToken = prefs.getString("barrierToken");
+    final id = prefs.getString("userId");
+
+    final response = await http.post(Uri.parse("$updateProfileUrl$id"), headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $brearToken',
+    });
+
+    var data = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      updateList = data['data'];
+      // print(data);
+      // print("SatyamSingh");
+      // print("sssssssssssssssssssssssssssssssssssssss");
+      update();
+    } else {
+      print("dat not found");
+      print("Metro");
+      throw Exception('Failed to load categories');
+    }
+  }
+}
+
+class CommunityController extends GetxController {
+  RxList commList = [].obs;
+
+  RxList isLikedList = [].obs;
+  RxList isDetail = [].obs;
+
+  Future<void> fetchComm() async {
+    final prefs = await SharedPreferences.getInstance();
+    final brearToken = prefs.getString("barrierToken");
+    final id = prefs.getString("userId");
+
+    final response = await http.get(Uri.parse("$commUrl$id"), headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $brearToken',
+    });
+
+    var data = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      commList.value = data['community'];
+      isLikedList.value = List.generate(commList.length, (index) => false);
+      for(int i=0;i<commList.length;i++){
+        if(commList[i]['userLikeStatus']==0){
+          isLikedList[i]=false;
+        }else{
+          isLikedList[i]=true;
+        }
+      }
+      print(isLikedList);
+      // isDetail.value = List.generate(commList.length, (index) => false);/
+      // print(data);
+      // print("SatyamSingh");
+      // print("sssssssssssssssssssssssssssssssssssssss");
+      update();
+    } else {
+      // print("dat not found");
+      // print("Metro");
+      throw Exception('Failed to load categories');
+    }
+  }
+  void toggleLikeUnlike(int index) {
+    isLikedList[index] = !isLikedList[index];
+    update();
+  }
+   toggleDetails(int index) {
+    isDetail[index] = !isDetail[index];
+    update();
+  }
+}
+
+

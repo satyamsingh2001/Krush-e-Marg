@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:krush_e_marg/app/auth/welcomeScreen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart'as http;
+import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
@@ -134,7 +134,7 @@ class _OtpVerificationState extends State<OtpVerification> {
               ),
             ),
             SignInUpButtonWidget(
-                text: !_loading?'Verify & Proceed':'circular',
+                text: !_loading ? 'Verify & Proceed' : 'circular',
                 onpressed: () async {
                   setState(() {
                     _loading = true;
@@ -146,10 +146,9 @@ class _OtpVerificationState extends State<OtpVerification> {
                             smsCode: code);
                     // Sign the user in (or link) with the credential
                     await auth.signInWithCredential(credential);
-                    registerUser('phone', widget.text.toString(),"");
-                      _loading = false;
-                    setState(() {
-                    });
+                    registerUser('phone', widget.text.toString(), "");
+                    _loading = false;
+                    setState(() {});
                   } catch (e) {
                     if (kDebugMode) {
                       print(e);
@@ -238,9 +237,10 @@ class _OtpVerificationState extends State<OtpVerification> {
       )),
     );
   }
-  registerUser(String type,String email,String? name) async {
+
+  registerUser(String type, String email, String? name) async {
     final response = await http.post(
-      Uri.parse("$baseurl/api/signup"),
+      Uri.parse("$baseurl/api/user/signup"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -251,12 +251,16 @@ class _OtpVerificationState extends State<OtpVerification> {
       }),
     );
     var data = jsonDecode(response.body);
-    var userid = data["data"]["id"];
     if (response.statusCode == 200) {
       final prefs = await SharedPreferences.getInstance();
-      const key = 'userId';
-      final userId = userid.toString();
-      prefs.setString(key, userId);
+      final userId =  data["data"]["id"].toString();
+      final type =  data["data"]["user_role"].toString();
+      final token =  data["data"]["token"].toString();
+
+
+      prefs.setString('userId', userId);
+      prefs.setString('type', type);
+      prefs.setString('barrierToken', token);
       Get.offAll(const DashBoardScreenMain());
       // Navigator.pushAndRemoveUntil(
       //     context,

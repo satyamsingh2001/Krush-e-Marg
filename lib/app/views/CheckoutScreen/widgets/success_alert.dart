@@ -2,7 +2,8 @@ import 'package:krush_e_marg/app/colors/colors_const.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../bottom_nav_bar/bottom_nav_bar.dart';
-import '../../shops/widgets/constalert.dart';
+import '../../bottom_nav_bar/shops/widgets/constalert.dart';
+
 
 class SuccessAlert extends StatelessWidget {
   const SuccessAlert({super.key});

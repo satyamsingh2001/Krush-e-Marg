@@ -2,7 +2,8 @@ import 'package:krush_e_marg/app/colors/colors_const.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../shops/views/shope_page.dart';
+import '../../bottom_nav_bar/shops/views/shope_page.dart';
+
 class CartEmpty extends StatelessWidget {
   const CartEmpty({Key? key}) : super(key: key);
 

@@ -1,0 +1,23 @@
+const String shop = "assets/products/shops.png";
+const String soilTesting = "assets/products/testing.png";
+const String waterTesting = "assets/products/waterTesting.png";
+const String cropAdvisory = "assets/products/advisory.png";
+const String cropCare = "assets/products/cropCare.png";
+const String cropPractices = "assets/products/cropPractices.png";
+const String videos = "assets/products/video.png";
+const String blog = "assets/products/blog.png";
+const String community = "assets/products/community.png";
+const String cropServices = "assets/products/services.png";
+const String weather = "assets/products/weather.png";
+const String news = "assets/products/news.png";
+const String cropDoctor = "assets/products/doctor.png";
+const String agriSchool = "assets/products/agriSchool.png";
+const String aiFarming = "assets/products/aiFarming.png";
+const String kisanDhan = "assets/products/kisanDhan.png";
+const String animalInsurance = "assets/products/animalInsurance.png";
+const String familyInsurance = "assets/products/familyInsurance.png";
+const String cropInsurance = "assets/products/cropInsurance.png";
+const String government = "assets/products/government.png";
+const String tech = "assets/products/tech.png";
+
+const String appLogo = "assets/images/applogo.png";

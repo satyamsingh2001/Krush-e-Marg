@@ -40,7 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final prefs = await SharedPreferences.getInstance();
     final userid = prefs.getString("userId");
     final response = await http.post(
-      Uri.parse("$updateProfile+$userid"),
+      Uri.parse("updateProfile+$userid"),
     );
     var data = jsonDecode(response.body);
 

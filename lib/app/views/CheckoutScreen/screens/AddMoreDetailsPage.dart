@@ -85,10 +85,9 @@ class _AddMoreDetailsPageState extends State<AddMoreDetailsPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   InkWell(
-                    onTap: (){
+                    onTap: () {
                       setState(() {
-                        _selected=!_selected;
-                        labelValue='HOME';
+                        labelValue = 'HOME';
                       });
                     },
                     child: Container(
@@ -96,72 +95,76 @@ class _AddMoreDetailsPageState extends State<AddMoreDetailsPage> {
                       width: 80,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                          color:  labelValue=='HOME'&&_selected? AppColors.error20: AppColors.white20,
-                          borderRadius: BorderRadius.circular(20),
-                          border: labelValue=='HOME'&&_selected?null:Border.all(color: AppColors.white50)
+                        color: labelValue == 'HOME' ? AppColors.error20 : AppColors.white20,
+                        borderRadius: BorderRadius.circular(20),
+                        border: labelValue == 'HOME' ? null : Border.all(color: AppColors.white50),
                       ),
-                      child:Text(
+                      child: Text(
                         'HOME',
-                        style: AppTextStyles.kBody15RegularTextStyle
-                            .copyWith(color: labelValue=='HOME'&&_selected?AppColors.white:AppColors.white70,),
-                      )
+                        style: AppTextStyles.kBody15RegularTextStyle.copyWith(
+                          color: labelValue == 'HOME' ? AppColors.white : AppColors.white70,
+                        ),
+                      ),
                     ),
                   ),
                   InkWell(
-                    onTap: (){
+                    onTap: () {
                       setState(() {
-                        _selected=!_selected;
                         labelValue = 'OFFICE';
                       });
                     },
                     child: Container(
-                        height: 35,
-                        width: 80,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            color:  labelValue=='OFFICE'&&_selected? AppColors.error20: AppColors.white20,
-                            borderRadius: BorderRadius.circular(20),
-                            border:labelValue=='OFFICE'&&_selected?null:Border.all(color: AppColors.white50)
+                      height: 35,
+                      width: 80,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: labelValue == 'OFFICE' ? AppColors.error20 : AppColors.white20,
+                        borderRadius: BorderRadius.circular(20),
+                        border: labelValue == 'OFFICE' ? null : Border.all(color: AppColors.white50),
+                      ),
+                      child: Text(
+                        'OFFICE',
+                        style: AppTextStyles.kBody15RegularTextStyle.copyWith(
+                          color: labelValue == 'OFFICE' ? AppColors.white : AppColors.white70,
                         ),
-                        child:Text(
-                          'OFFICE',
-                          style: AppTextStyles.kBody15RegularTextStyle
-                              .copyWith(color: labelValue=='OFFICE'&&_selected?AppColors.white:AppColors.white70,),
-                        )
+                      ),
                     ),
                   ),
                   InkWell(
-                    onTap: (){
+                    onTap: () {
                       setState(() {
-                        _selected=!_selected;
                         labelValue = 'OTHER';
                       });
                     },
                     child: Container(
-                        height: 35,
-                        width: 80,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            color:  labelValue=='OTHER'&&_selected? AppColors.error20: AppColors.white20,
-                            borderRadius: BorderRadius.circular(20),
-                            border: labelValue=='OTHER'&&_selected?null:Border.all(color: AppColors.white50)
+                      height: 35,
+                      width: 80,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: labelValue == 'OTHER' ? AppColors.error20 : AppColors.white20,
+                        borderRadius: BorderRadius.circular(20),
+                        border: labelValue == 'OTHER' ? null : Border.all(color: AppColors.white50),
+                      ),
+                      child: Text(
+                        'OTHER',
+                        style: AppTextStyles.kBody15RegularTextStyle.copyWith(
+                          color: labelValue == 'OTHER' ? AppColors.white : AppColors.white70,
                         ),
-                        child:Text(
-                          'OTHER',
-                          style: AppTextStyles.kBody15RegularTextStyle
-                              .copyWith(color: labelValue=='OTHER'&&_selected?AppColors.white:AppColors.white70,),
-                        )
+                      ),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 15,),
-              labelValue=='OTHER'&&_selected
-                  ?ConstantTextFormField(
-                controller: label,
-                hintText: "Add Other Label",
-                label: "Add Other Label",
-              ):Container(),
+              if (labelValue == 'OTHER')
+                ConstantTextFormField(
+                  controller: label,
+                  hintText: "Add Other Label",
+                  label: "Add Other Label",
+                )
+              else
+                Container(),
+
               const SizedBox(height: 10,),
               SizedBox(
                 height: 45,
@@ -204,10 +207,14 @@ class _AddMoreDetailsPageState extends State<AddMoreDetailsPage> {
       ) async {
     final prefs = await SharedPreferences.getInstance();
     final userid = prefs.getString("userId");
+    final brearToken = prefs.getString("barrierToken");
+
     final response = await http.post(
-      Uri.parse("$baseurl/api/add/address/$userid"),
+      Uri.parse("$baseurl/api/user/add/address/$userid"),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $brearToken',
       },
       body: jsonEncode(<String, String>{
         "label": label!,
@@ -218,10 +225,8 @@ class _AddMoreDetailsPageState extends State<AddMoreDetailsPage> {
       }),
     );
     var data = jsonDecode(response.body);
-    if (kDebugMode) {
-      print(data);
-    }
     if (response.statusCode == 200) {
+      print(data);
       Get.off(const CheckoutScreeen());
     } else {
       if (kDebugMode) {

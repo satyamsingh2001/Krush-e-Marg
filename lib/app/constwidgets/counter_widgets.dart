@@ -36,7 +36,7 @@ class _CounterWidgetState extends State<CounterWidget> {
               onTap: widget.minusOntap,
               child:  SizedBox(
                 height: size.height,
-                width: 20,
+                width: 25,
                 child: const Icon(
                   CupertinoIcons.minus,
                   color: AppColors.primary,
@@ -49,7 +49,7 @@ class _CounterWidgetState extends State<CounterWidget> {
               onTap: widget.plusOntap,
               child: SizedBox(
                 height: size.height,
-                width: 20,
+                width: 25,
                 child: const Icon(
                   CupertinoIcons.add,
                   color: AppColors.primary,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:razorpay_flutter_31/razorpay_flutter_31.dart';
 
 import '../../../colors/colors_const.dart';
 import '../../../textstyles/textstyle_const.dart';
@@ -15,33 +14,33 @@ class _TopUpState extends State<TopUp> {
   final TextEditingController _controller = TextEditingController();
   final ValueNotifier<PriceContainer?> _selectedContainer = ValueNotifier(null);
 
-  void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    Fluttertoast.showToast(
-        msg: "SUCCESS PAYMENT: ${response.paymentId}", timeInSecForIosWeb: 4);
-  }
-
-  void _handlePaymentError(PaymentFailureResponse response) {
-    Fluttertoast.showToast(
-        msg: "ERROR HERE: ${response.code} - ${response.message}",
-        timeInSecForIosWeb: 4);
-  }
-
-  void _handleExternalWallet(ExternalWalletResponse response) {
-    Fluttertoast.showToast(
-        msg: "EXTERNAL_WALLET IS : ${response.walletName}",
-        timeInSecForIosWeb: 4);
-  }
-
-  Razorpay? _razorpay;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _razorpay = Razorpay();
-    _razorpay?.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    _razorpay?.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    _razorpay?.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
-  }
+  // void _handlePaymentSuccess(PaymentSuccessResponse response) {
+  //   Fluttertoast.showToast(
+  //       msg: "SUCCESS PAYMENT: ${response.paymentId}", timeInSecForIosWeb: 4);
+  // }
+  //
+  // void _handlePaymentError(PaymentFailureResponse response) {
+  //   Fluttertoast.showToast(
+  //       msg: "ERROR HERE: ${response.code} - ${response.message}",
+  //       timeInSecForIosWeb: 4);
+  // }
+  //
+  // void _handleExternalWallet(ExternalWalletResponse response) {
+  //   Fluttertoast.showToast(
+  //       msg: "EXTERNAL_WALLET IS : ${response.walletName}",
+  //       timeInSecForIosWeb: 4);
+  // }
+  //
+  // Razorpay? _razorpay;
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   _razorpay = Razorpay();
+  //   _razorpay?.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+  //   _razorpay?.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+  //   _razorpay?.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  // }
 
   void openPaymentPortal(
       ) async {
@@ -57,7 +56,7 @@ class _TopUpState extends State<TopUp> {
     };
 
     try {
-      _razorpay?.open(options);
+      // _razorpay?.open(options);
     } catch (e) {
       debugPrint(e.toString());
     }

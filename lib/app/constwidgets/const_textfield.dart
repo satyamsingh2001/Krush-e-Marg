@@ -35,56 +35,52 @@ class ConstTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.only(bottom: 3.0),
-      child: SizedBox(
-        height: size.height*0.06,
-        child: TextFormField(
-          onTap: onTap,
-          readOnly: readyOnly??false,
-          validator: validator,
-          controller: controller,
-          onChanged: onChanged,
-          keyboardType: inputType,
-          obscureText: obscure??false,
-          cursorColor: AppColors.primary,
-          maxLength: maxLength,
-          maxLines: maxLine,
-          cursorHeight: 20,
-          style:style ?? AppTextStyles.kBody17SemiboldTextStyle
-              .copyWith(color: AppColors.primary),
-          decoration: InputDecoration(
-            suffix: suffix,
-            suffixIcon: suffixIcon,
-            hintText: hintText,
-            hintStyle:  hintStyle??AppTextStyles.kCaption12RegularTextStyle
-                .copyWith(color: AppColors.white50),
-            counter: const Offstage(),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-              borderSide: BorderSide(color:enableBorderColor??AppColors.white60 ,width: 1),
-            ),
-            focusedBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-              borderSide: BorderSide(color: AppColors.primary, width: 1),
-            ),
-            border: const OutlineInputBorder(
-              borderSide: BorderSide(color: AppColors.white60),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10.0),
-              ),
-            ),
-            focusedErrorBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-              borderSide: BorderSide(color: Color(0xFFF65054)),
-            ),
-            errorBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-              borderSide: BorderSide(color: Color(0xFFF65054)),
-            ),
-            contentPadding: const EdgeInsets.symmetric(horizontal : 8),
+      child: TextFormField(
+        onTap: onTap,
+        readOnly: readyOnly??false,
+        validator: validator,
+        controller: controller,
+        onChanged: onChanged,
+        keyboardType: inputType,
+        obscureText: obscure??false,
+        cursorColor: AppColors.primary,
+        maxLength: maxLength,
+        maxLines: maxLine,
+        cursorHeight: 20,
+        style:style ?? AppTextStyles.kBody17SemiboldTextStyle
+            .copyWith(color: AppColors.primary),
+        decoration: InputDecoration(
+          suffix: suffix,
+          suffixIcon: suffixIcon,
+          hintText: hintText,
+          hintStyle:  hintStyle??AppTextStyles.kCaption12RegularTextStyle
+              .copyWith(color: AppColors.white50),
+          counter: const Offstage(),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+            borderSide: BorderSide(color:enableBorderColor??AppColors.white60 ,width: 1),
           ),
+          focusedBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(5.0)),
+            borderSide: BorderSide(color: AppColors.primary, width: 1),
+          ),
+          border: const OutlineInputBorder(
+            borderSide: BorderSide(color: AppColors.white60),
+            borderRadius: BorderRadius.all(
+              Radius.circular(10.0),
+            ),
+          ),
+          focusedErrorBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(5.0)),
+            borderSide: BorderSide(color: Color(0xFFF65054)),
+          ),
+          errorBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(5.0)),
+            borderSide: BorderSide(color: Color(0xFFF65054)),
+          ),
+          contentPadding: const EdgeInsets.symmetric(horizontal : 8),
         ),
       ),
     );

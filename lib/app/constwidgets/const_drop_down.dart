@@ -5,7 +5,7 @@ import '../colors/colors_const.dart';
 import '../textstyles/textstyle_const.dart';
 
 class ConstantDropdown extends StatefulWidget {
-  final List<String> options;
+  final List options;
   final ValueChanged onChanged;
   final Color iconColor;
   final Color dropdownColor;
@@ -30,7 +30,8 @@ class _ConstantDropdownState extends State<ConstantDropdown> {
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
       child: DropdownButtonFormField<String>(
-        hint: Text(widget.hint),
+        hint: Text(widget.hint,style: AppTextStyles.kCaption12SemiboldTextStyle
+            .copyWith(color: AppColors.white50)),
         decoration: const InputDecoration(
           contentPadding: EdgeInsets.symmetric(horizontal: 8),
           border:  OutlineInputBorder(
@@ -43,7 +44,7 @@ class _ConstantDropdownState extends State<ConstantDropdown> {
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: AppColors.white60,
+              color: AppColors.primary,
             ),
           ),
           errorBorder: OutlineInputBorder(
@@ -59,7 +60,7 @@ class _ConstantDropdownState extends State<ConstantDropdown> {
         ),
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Please select an gender';
+            return 'Please select value';
           }
           return null;
         },
@@ -69,8 +70,8 @@ class _ConstantDropdownState extends State<ConstantDropdown> {
         // icon: const Icon(CupertinoIcons.chevron_down),
         // iconSize: 15,
         iconEnabledColor: widget.iconColor,
-        items: widget.options.map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
+        items: widget.options.map<DropdownMenuItem<String>>((value) {
+          return DropdownMenuItem(
             value: value,
             child: Text(
               value,
