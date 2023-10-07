@@ -41,15 +41,12 @@ class WeatherController extends GetxController {
         windData.value = data['wind'];
         final iconCode = data['weather'][0]['icon'];
         iconUrl = getWeatherIconUrl(iconCode);
-        print(currentCity.split(',')[0].trim(),);
-        print("Shrinet");
+        // print(currentCity.split(',')[0].trim(),);
         update();
       } else {
 
-        print("currentCity");
-        print("Singh");
         Get.rawSnackbar(
-          messageText: Text('Failed to load data: ${response.statusCode}'),
+          messageText: Text('Failed to load weather data: ${response.statusCode}'),
           borderRadius: 8.0,
           backgroundColor: Colors.redAccent,
           padding: const EdgeInsets.all(16.0),
@@ -66,7 +63,6 @@ class WeatherController extends GetxController {
     final iconUrl = 'https://openweathermap.org/img/wn/$iconCode.png';
     return iconUrl;
   }
-
   Future<void> fetchHourlyWeather() async {
     try {
       final response = await http.get(Uri.parse(hourlyWeatherUrl));
@@ -79,9 +75,28 @@ class WeatherController extends GetxController {
           DateTime.fromMillisecondsSinceEpoch(hourlyData['dt'] * 1000);
           final double temperature = hourlyData['main']['temp'].toDouble();
           final double humidity = hourlyData['main']['humidity'].toDouble();
-          final String windSpeed = hourlyData['wind'][0].toDouble();
+
+          // Handle the wind speed data
+          dynamic windSpeedValue = hourlyData['wind'][0];
+          double windSpeed;
+          if (windSpeedValue is String) {
+            // If windSpeedValue is a string, convert it to a double
+            windSpeed = double.tryParse(windSpeedValue) ?? 0.0; // Use a default value if parsing fails
+          } else if (windSpeedValue is num) {
+            // If windSpeedValue is already a number, use it as is
+            windSpeed = windSpeedValue.toDouble();
+          } else {
+            // Handle other cases as needed
+            windSpeed = 0.0; // Use a default value if the type is unexpected
+          }
+
           final String iconCode = hourlyData['weather'][0]['icon'];
           final String iconUrl = getWeatherIconUrl(iconCode);
+          //
+          // final double maxTemperature =
+          // hourlyData['main']['temp_max'].toDouble();
+          // final double minTemperature =
+          // hourlyData['main']['temp_min'].toDouble();
 
           return {
             'time': time,
@@ -89,6 +104,8 @@ class WeatherController extends GetxController {
             'humidity': humidity,
             'wind': windSpeed,
             'iconUrl': iconUrl,
+
+
           };
         }).toList());
         calculateDailyWeather();
@@ -99,6 +116,7 @@ class WeatherController extends GetxController {
       throw Exception('Error fetching data: $e');
     }
   }
+
 
   void calculateDailyWeather() {
     dailyWeatherList.clear();

@@ -1,15 +1,19 @@
+import 'dart:convert';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:krush_e_marg/app/const/api_string.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../colors/colors_const.dart';
 import '../../../constwidgets/container_widget.dart';
 import '../../../constwidgets/counter_widgets.dart';
 import '../../../controller/api_controller.dart';
-import '../../../controller/instruction_controller.dart';
 import '../../../database/database_helper2.dart';
 import '../../../textstyles/textstyle_const.dart';
-import '../api/checkout_api.dart';
 import '../controller/tip_controller.dart';
 import '../screens/addnewaddress.dart';
 import '../widgets/cart_empty.dart';
@@ -24,6 +28,7 @@ class CheckoutScreeen extends StatefulWidget {
 }
 
 class _CheckoutScreeenState extends State<CheckoutScreeen> {
+
   @override
   void initState() {
     super.initState();
@@ -31,121 +36,274 @@ class _CheckoutScreeenState extends State<CheckoutScreeen> {
     fetchProductsInit();
     // paymentController.razorInit();
   }
+  List<Map<String, dynamic>> productListForApi=[];
 
   TextEditingController msgController = TextEditingController();
   AddressController addressController = Get.find();
-  InstructionController instructionController =
-      Get.put(InstructionController());
+  // InstructionController instructionController =
+  //     Get.put(InstructionController());
   // PaymentController paymentController = Get.put(PaymentController());
   TipController tipController = Get.put(TipController());
 
   List<Product> productList = [];
-  String storeID = "";
-
+  // String storeID = "";
   void fetchProductsInit() async {
     final products = await ProductDatabase.instance.fetchProducts();
     setState(() {
       productList = products;
-      storeID = productList[0].storeId.toString();
-      fetchCoupons(storeID);
-      storeWithId(storeID);
-      fetchAdditionalProduct(storeID);
-      adminOffer(storeID);
+      // storeID = productList[0].storeId.toString();
+      // fetchCoupons(storeID);
+      // storeWithId(storeID);
+      // fetchAdditionalProduct(storeID);
+      // adminOffer(storeID);
       productListForApi =
           products.map((product) => product.toMapForApi()).toList();
     });
   }
 
   void fetchProducts() async {
-    final products = await ProductDatabase.instance.fetchProducts();
+    var products = await ProductDatabase.instance.fetchProducts();
+
+    // Create a map to group products by store_id
+    Map<String, List<Product>> productsByStore = {};
+
+    for (var product in products) {
+      String storeId = product.storeId ?? "";
+
+      if (!productsByStore.containsKey(storeId)) {
+        productsByStore[storeId] = [];
+      }
+
+      productsByStore[storeId]?.add(product);
+    }
+
+    // Convert the grouped products into the desired format for productListForApi
+    productListForApi = productsByStore.values.map((storeProducts) {
+      return storeProducts.map((product) => product.toMapForApi()).toList();
+    }).cast<Map<String, dynamic>>().toList(); // Removed the cast here
+
+
     setState(() {
       productList = products;
-      productListForApi =
-          products.map((product) => product.toMapForApi()).toList();
     });
   }
 
-  // List<Map<String, dynamic>> productListForApi=[];
-  //
-  // Future<void> sendCartToApi(
-  //     List<Map<String, dynamic>> productList,
-  //     String totalAmount,
-  //     String paymentMethod,
-  //     String couponDiscount,
-  //     String couponCode,
-  //     int storeId,
-  //     double partnerTip,
-  //     String shippingFee,
-  //     int packageFee,
-  //     String instruction,
-  //     String address
-  //     ) async {
-  //   const apiUrl = 'http://www.krush_e_marg.com/api/chekout';
-  //
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final userid = prefs.getString("userId");
-  //
-  //   Map<String, dynamic> dataMap = {
-  //     "user_id":"$userid",
-  //     "address":address,
-  //     "city":"Bulandshahr",
-  //     "state":"UP",
-  //     "pincode":"245412",
-  //     "landmark":"This is my landmark",
-  //     "payment_method":paymentMethod,
-  //     "total_amount":totalAmount,
-  //     "coupon_discount":couponDiscount,
-  //     "coupon_code":couponCode,
-  //     "shipping_charges":shippingFee,
-  //     "package_fees":packageFee,
-  //     "extra_charges":0,
-  //     "store_id":storeId,
-  //     "tax":0,
-  //     "discount_by":"store",
-  //     "delivery_tip":partnerTip,
-  //     "instruction":instruction
-  //   };
-  //
-  //   Map<String, dynamic> requestPayload = {
-  //     'cart': productList,
-  //     'data': dataMap,
-  //   };
-  //
-  //   try {
-  //     final response = await http.post(
-  //       Uri.parse(apiUrl),
-  //       headers: {'Content-Type': 'application/json'},
-  //       body: jsonEncode(requestPayload),
-  //     );
-  //
-  //     var data = jsonDecode(response.body);
-  //
-  //     if (data['status'] == 1) {
-  //       if(paymentMethod=='online'){
-  //         paymentController.openPaymentPortal(data['paymentOption']);
-  //       }else{
-  //         paymentController.showSuccessDialog();
-  //         deleteProduct();
-  //       }
-  //       if (kDebugMode) {
-  //         print('Cart sent successfully.');
-  //         print(data);
-  //       }
-  //     } else {
-  //       if (kDebugMode) {
-  //         print('Error sending cart. Status code: ${response.statusCode}');
-  //       }
-  //     }
-  //   } catch (e) {
-  //     if (kDebugMode) {
-  //       print('Error sending cart: $e');
-  //     }
-  //   }
-  // }
+  // Define the function to group products by storeId
+  Map<String, List<Product>> groupProductsByStore(List<Product> productList) {
+    Map<String, List<Product>> productsByStore = {};
 
-  // List<bool> items=[];
-  // // List<bool> item1=[];
-  //
+    for (Product product in productList) {
+      String storeId = product.storeId ?? "";
+      if (!productsByStore.containsKey(storeId)) {
+        productsByStore[storeId] = [];
+      }
+      productsByStore[storeId]?.add(product);
+    }
+
+    return productsByStore;
+  }
+
+//   Future<void> sendCartToApi(
+//       List<Map<String, dynamic>> productList,
+//       String totalAmount,
+//       String paymentMethod,
+//       // String instruction,
+//       String address,
+//       ) async {
+//     const apiUrl = checkoutUrl;
+//
+//     final prefs = await SharedPreferences.getInstance();
+//     final userId = prefs.getString("userId");
+//
+//     List<Map<String, dynamic>> cartItems = [];
+//
+// // Iterate over productList and create cart items
+//     for (var product in productList) {
+//       Map<String, dynamic> cartItem = {
+//         "product_name": {
+//           "product_name": product["product_name"],
+//           "product_id": product["product_id"],
+//           "price": product["price"], // Add the price field here
+//         },
+//         "price": {
+//           "product_name": product["product_name"],
+//           "product_id": product["product_id"],
+//           "price": product["price"], // Add the price field here
+//         },
+//         "quantity": {
+//           "product_name": product["product_name"],
+//           "product_id": product["product_id"],
+//           "price": product["price"], // Add the price field here
+//         },
+//         "attribute": {
+//           "product_name": product["product_name"],
+//           "product_id": product["product_id"],
+//           "price": product["price"], // Add the price field here
+//         },
+//         // Add other required fields here with the appropriate structure
+//       };
+//       cartItems.add(cartItem);
+//     }
+//
+//
+//     // Create the dataMap with cart items and other data
+//     Map<String, dynamic> dataMap = {
+//       "user_id": userId,
+//       "address": address,
+//       "city": "Bulandshahr",
+//       "state": "UP",
+//       "pincode": "245412",
+//       "landmark": "This is my landmark",
+//       "payment_method": paymentMethod,
+//       "total_amount": totalAmount,
+//       "tax": 0,
+//       "order_by":"user", // user, deliveryMan
+//       // "instruction": instruction,
+//     };
+//
+//     // Create the request payload
+//     Map<String, dynamic> requestPayload = {
+//       'cart': cartItems,
+//       'data': dataMap,
+//     };
+//
+//     try {
+//       final response = await http.post(
+//         Uri.parse(apiUrl),
+//         headers: {'Content-Type': 'application/json'},
+//         body: jsonEncode(requestPayload),
+//       );
+//
+//       var data = jsonDecode(response.body);
+//
+//       if (data['status'] == 1) {
+//         if (paymentMethod == 'online') {
+//           // Handle online payment logic here
+//           // paymentController.openPaymentPortal(data['paymentOption']);
+//         } else {
+//           // Handle success dialog or deletion logic here
+//           // paymentController.showSuccessDialog();
+//           // deleteProduct();
+//         }
+//
+//         if (kDebugMode) {
+//           print('Cart sent successfully.');
+//           print(data);
+//         }
+//       } else {
+//         if (kDebugMode) {
+//           print('Error sending cart. Status code: ${response.statusCode}');
+//        print(data);
+//         }
+//       }
+//     } catch (e) {
+//       if (kDebugMode) {
+//         print('Error sending cart: $e');
+//       }
+//     }
+//   }
+//
+  Future<void> sendCartToApi(
+      List<List<Map<String, dynamic>>> productListForApi,
+      String totalAmount,
+      String paymentMethod,
+      String address,
+      ) async {
+    const apiUrl = checkoutUrl;
+
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString("userId");
+
+    List<Map<String, dynamic>> cartItems = [];
+
+    List<List<Map<String, dynamic>>> shoppingCart = [];
+
+    for (int i = 0; i < productListForApi.length; i++) {
+      var storeProducts = productListForApi[i];
+      List<Map<String, dynamic>> storeCartItems = [];
+
+      for (var product in storeProducts) {
+        Map<String, dynamic> cartItem = {
+          "product_name": product["product_name"],
+          "product_id": product["product_id"],
+          "price": product["price"],
+          "quantity": product["quantity"],
+          "attribute": product["attribute"],
+          "unit": product["unit"],
+          "size": product["size"],
+          "store_id": product["store_id"],
+          "product_amount": product["price"] * product["quantity"],
+          // Add other required fields here with the appropriate structure
+        };
+        storeCartItems.add(cartItem);
+      }
+
+      shoppingCart.add(storeCartItems);
+      cartItems.addAll(storeCartItems);
+    }
+
+    // Create the dataMap with cart items and other data
+    Map<String, dynamic> dataMap = {
+      "user_id": userId,
+      "address": address,
+      "city": "Bulandshahr",
+      "state": "UP",
+      "pincode": "245412",
+      "landmark": "This is my landmark",
+      "payment_method": paymentMethod,
+      "total_amount": totalAmount,
+      "tax": 0,
+      "order_by": "user",
+      // "instruction": instruction,
+    };
+
+    // Create the request payload
+    Map<String, dynamic> requestPayload = {
+      'cart': cartItems,
+      'data': dataMap,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(requestPayload),
+      );
+
+      var data = jsonDecode(response.body);
+
+      if (data['status'] == 1) {
+        if (paymentMethod == 'online') {
+          // Handle online payment logic here
+          // paymentController.openPaymentPortal(data['paymentOption']);
+        } else {
+          // Handle success dialog or deletion logic here
+          // paymentController.showSuccessDialog();
+          // deleteProduct();
+        }
+
+        if (kDebugMode) {
+          print('Cart sent successfully.');
+          print(data);
+        }
+      } else {
+        if (kDebugMode) {
+          print('Error sending cart. Status code: ${response.statusCode}');
+          print(data);
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error sending cart: $e');
+      }
+    }
+  }
+
+
+
+  List<bool> items=[];
+  // List<bool> item1=[];
+
   // List<dynamic> storeCoupon = [];
   // Future<void> fetchCoupons() async {
   //   final response = await http.get(Uri.parse(
@@ -189,7 +347,7 @@ class _CheckoutScreeenState extends State<CheckoutScreeen> {
   //   }
   // }
 
-  // var map;
+  var map;
   // Future storeWithId() async {
   //   final response = await http.get(
   //     Uri.parse("$store_with_id+$storeID"),
@@ -202,9 +360,9 @@ class _CheckoutScreeenState extends State<CheckoutScreeen> {
   //   }
   // }
 
-  // var partnerTip=0;
+  var partnerTip=0;
 
-  // bool tipSelected=false;
+  bool tipSelected=false;
   String couponTitle = 'Apply Coupons';
   String couponCode = "";
   double offerDiscount = 0;
@@ -220,8 +378,8 @@ class _CheckoutScreeenState extends State<CheckoutScreeen> {
 
   @override
   Widget build(BuildContext context) {
-    String concatenatedString = instructionController.selectedInst.join(", ");
-    concatenatedString = concatenatedString.replaceAll('\n', '');
+    // String concatenatedString = instructionController.selectedInst.join(", ");
+    // concatenatedString = concatenatedString.replaceAll('\n', '');
 
     String expectedTime =
         map == null ? '' : map['minTime'] + '-' + map['maxTime'];
@@ -243,9 +401,9 @@ class _CheckoutScreeenState extends State<CheckoutScreeen> {
       for (int i = 0; i < items.length; i++) {
         items[i] = false; // Set all items to false
       }
-      for (int i = 0; i < item1.length; i++) {
-        item1[i] = false; // Set all item1 to false
-      }
+      // for (int i = 0; i < item1.length; i++) {
+      //   item1[i] = false; // Set all item1 to false
+      // }
       couponCode = '';
       maxDiscount = null;
       offerDiscount = 0;
@@ -276,7 +434,8 @@ class _CheckoutScreeenState extends State<CheckoutScreeen> {
               ),
               centerTitle: true,
               title: Text(
-                productList[0].storeName.toString(),
+                "My Cart",
+                // productList[0].storeName.toString(),
                 style: AppTextStyles.kBody20SemiboldTextStyle.copyWith(
                   color: AppColors.white100,
                 ),
@@ -321,7 +480,7 @@ class _CheckoutScreeenState extends State<CheckoutScreeen> {
                           width: size.width,
                           child: Padding(
                             padding: const EdgeInsets.only(
-                                left: 8.0, top: 8.0, right: 8.0),
+                                left: 8.0, top: 8.0, right: 8.0,bottom: 8),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -332,11 +491,13 @@ class _CheckoutScreeenState extends State<CheckoutScreeen> {
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                ListView.builder(
+                                ListView.separated(
+                                  reverse: true,
                                     physics:
                                         const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
                                     itemCount: productList.length,
+
                                     itemBuilder: (BuildContext context, index) {
                                       var price = productList[index].price! *
                                           productList[index].quantity!.toInt();
@@ -346,6 +507,7 @@ class _CheckoutScreeenState extends State<CheckoutScreeen> {
                                               .size
                                               .toString() +
                                           productList[index].unit.toString();
+
                                       return Column(
                                         children: [
                                           Row(
@@ -357,8 +519,8 @@ class _CheckoutScreeenState extends State<CheckoutScreeen> {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             7),
-                                                    child: Image.network(
-                                                      productList[index]
+                                                    child: CachedNetworkImage(
+                                                        imageUrl: productList[index]
                                                           .imageUrl
                                                           .toString(),
                                                       fit: BoxFit.fill,
@@ -531,17 +693,20 @@ class _CheckoutScreeenState extends State<CheckoutScreeen> {
                                               ),
                                             ],
                                           ),
-                                          index != productList.length - 1
-                                              ? const Divider(
-                                                  color: AppColors.white40,
-                                                  thickness: 1,
-                                                )
-                                              : const SizedBox(
-                                                  height: 10,
-                                                ),
+                                          // index != productList.length - 1
+                                          //     ? const Divider(
+                                          //         color: AppColors.white40,
+                                          //         thickness: 1,
+                                          //       )
+                                          //     : const SizedBox(
+                                          //         height: 10,
+                                          //       ),
                                         ],
                                       );
-                                    }),
+                                    }, separatorBuilder: (BuildContext context, int index) {return  const Divider(
+                                  color: AppColors.white40,
+                                  thickness: 1,
+                                ) ;},),
                               ],
                             ),
                           ),
@@ -1021,7 +1186,7 @@ class _CheckoutScreeenState extends State<CheckoutScreeen> {
                                       const SizedBox(
                                         height: 3,
                                       ),
-                                      Obx(() => tipController.customTip != 0
+                                      Obx(() => tipController.customTip.value != 0
                                           ? Row(
                                               children: [
                                                 Text(
@@ -1164,13 +1329,9 @@ class _CheckoutScreeenState extends State<CheckoutScreeen> {
                                                 .kBody15SemiboldTextStyle,
                                           ),
                                           Obx(
-                                            () => Text(
-                                              '₹${grandTotal + tipController.customTip.toInt()}',
-                                              style: AppTextStyles
-                                                  .kBody15SemiboldTextStyle
-                                                  .copyWith(
-                                                      color: AppColors.primary),
-                                            ),
+                                            () =>
+                                                Text('₹${(grandTotal + tipController.customTip.toInt()).toStringAsFixed(2)}', style: AppTextStyles.kBody15SemiboldTextStyle.copyWith(color: AppColors.primary)),
+
                                           ),
                                         ],
                                       ),
@@ -1873,7 +2034,6 @@ class _CheckoutScreeenState extends State<CheckoutScreeen> {
                         //         );
                         //       }),
                         //     )),
-
                         const SizedBox(height: 15),
                         // const DeliveryInstruction(),
                         // ContainerWidget(
@@ -1991,7 +2151,6 @@ class _CheckoutScreeenState extends State<CheckoutScreeen> {
                         //         ],
                         //       ),
                         //     )),
-
                         const SizedBox(
                           height: 15,
                         ),
@@ -2233,10 +2392,14 @@ class _CheckoutScreeenState extends State<CheckoutScreeen> {
                                                                           10.0),
                                                             ),
                                                             itemBuilder:
-                                                                (contex) {
+                                                                (context) {
                                                               return [
                                                                 PopupMenuItem(
                                                                   onTap: () {
+                                                                    print(add['id']
+                                                                        .toString());
+                                                                    addressController.deleteAddress(add['id']
+                                                                    );
                                                                     // print('suraj');
                                                                   },
                                                                   padding:
@@ -2363,20 +2526,12 @@ class _CheckoutScreeenState extends State<CheckoutScreeen> {
                             width: size.width * 0.7,
                             child: ElevatedButton(
                                 onPressed: () {
-                                  // print()
-                                  // sendCartToApi(
-                                  //     productListForApi,
-                                  //     '${grandTotal + tipController.customTip.toInt()}',
-                                  //     selectedOption,
-                                  //     offerDiscount.toString(),
-                                  //     couponCode,
-                                  //     int.parse(
-                                  //         productList[0].storeId.toString()),
-                                  //     tipController.customTip.toDouble(),
-                                  //     deliveryFee.toString(),
-                                  //     handlingCharge,
-                                  //     concatenatedString,
-                                  //     addressController.address);
+                                  sendCartToApi(
+                                      // shoppingCart ,
+                                      productListForApi.cast<List<Map<String, dynamic>>>(),
+                                      '${grandTotal + tipController.customTip.toInt()}',
+                                      selectedOption,
+                                      addressController.address);
                                 },
                                 style: ElevatedButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(
@@ -2399,11 +2554,11 @@ class _CheckoutScreeenState extends State<CheckoutScreeen> {
                                             color: AppColors.white30,
                                           ),
                                         ),
-                                        Text(
-                                          '₹${grandTotal + tipController.customTip.toInt()}',
-                                          style: AppTextStyles
-                                              .kBody15SemiboldTextStyle,
-                                        )
+                                        Obx(
+                                              () =>
+                                              Text('₹${(grandTotal + tipController.customTip.toInt()).toStringAsFixed(2)}', style: AppTextStyles.kBody15SemiboldTextStyle.copyWith(color: AppColors.white)),
+
+                                        ),
                                       ],
                                     ),
                                     const Spacer(),

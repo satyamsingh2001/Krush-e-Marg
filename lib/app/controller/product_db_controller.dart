@@ -1,7 +1,5 @@
 import 'dart:async';
-
 import 'package:get/get.dart';
-
 import '../database/database_helper2.dart';
 
 class ProductController extends GetxController {

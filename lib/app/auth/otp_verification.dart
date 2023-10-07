@@ -238,16 +238,16 @@ class _OtpVerificationState extends State<OtpVerification> {
     );
   }
 
-  registerUser(String type, String email, String? name) async {
+  registerUser(String type, String email, String name) async {
     final response = await http.post(
-      Uri.parse("$baseurl/api/user/signup"),
+      Uri.parse("$baseurl/api/user/login"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
         "login_type": type,
         "email_phone": email,
-        "name": name!
+        "name": name
       }),
     );
     var data = jsonDecode(response.body);

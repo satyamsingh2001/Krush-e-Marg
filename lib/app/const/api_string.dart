@@ -22,3 +22,5 @@ const String commentUrl = '$baseurl/api/user/communityComment/';
 const String postCommUrl = '$baseurl/api/user/addCommunity';
 const String subCatUrl = '$baseurl/api/user/subCategoryWithCategory/';
 const String addAddressUrl = '$baseurl/api/user/add/address/';
+const String checkoutUrl = '$baseurl/api/user/chekout';
+const String delAddressUrl = '$baseurl/api/user//address/delete/';

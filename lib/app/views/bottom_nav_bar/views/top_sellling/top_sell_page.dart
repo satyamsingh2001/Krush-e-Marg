@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -28,10 +29,10 @@ class _TopSellingPageState extends State<TopSellingPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    topSellingController.fetchTopSell();
+    // topSellingController.fetchTopSell();
   }
-  String storeID = "";
-  String storeName = "";
+  // String storeID = "";
+  // String storeName = "";
   List quant = [];
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,9 @@ class _TopSellingPageState extends State<TopSellingPage> {
 
                     final toSell = topSellingController.topSellList[index];
                     final product = toSell;
-
+                    final String storeID = product['store_id'].toString();
+                    final String storeName =
+                        "${product['store']['name']}";
                     // final product = additionalProduct[index];
                     var varientsDetails =
                     toSell['variantDetails'].toString();
@@ -74,7 +77,6 @@ class _TopSellingPageState extends State<TopSellingPage> {
                         ? mrp - discount
                         : mrp - ((mrp * discount) / 100);
                     var unit = output[0]["unit"].toString();
-
 
 
                     bool show = false;
@@ -114,14 +116,16 @@ class _TopSellingPageState extends State<TopSellingPage> {
                                   Align(
                                     alignment: Alignment.topCenter,
                                     child:
-                                    Image.network(
-                                      toSell['image']
-                                          .toString(),
-                                      height: 70,
-                                      // width: 70,
-                                      fit: BoxFit.fill,
-                                    )
 
+                                    CachedNetworkImage(
+                                      imageUrl:    toSell['image']
+                                          .toString(),
+                                      // placeholder: (context, url) => CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) => const Icon(Icons.error),
+                                      // width: 60, // Specify the desired width
+                                      height: 70,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -180,25 +184,27 @@ class _TopSellingPageState extends State<TopSellingPage> {
                                 mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Column(
-                                    children: [
-                                       Text(
-                                        '₹${price.toInt()}',
-                                        // "99",
-                                        style: AppTextStyles
-                                            .kCaption12SemiboldTextStyle,
-                                      ),
-                                      Text(
-                                        '₹${mrp.toInt()}',
-                                        // "100",
-                                        style: AppTextStyles
-                                            .kSmall10RegularTextStyle
-                                            .copyWith(
-                                            color: AppColors.white60,
-                                            decoration: TextDecoration
-                                                .lineThrough),
-                                      ),
-                                    ],
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                         Text(
+                                          '₹${price.toInt()}',
+                                          // "99",
+                                          style: AppTextStyles
+                                              .kCaption12SemiboldTextStyle,
+                                        ),
+                                        Text(
+                                          '₹${mrp.toInt()}',
+                                          // "100",
+                                          style: AppTextStyles
+                                              .kSmall10RegularTextStyle
+                                              .copyWith(
+                                              color: AppColors.white60,
+                                              decoration: TextDecoration
+                                                  .lineThrough),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   !show
                                       ?
@@ -207,65 +213,18 @@ class _TopSellingPageState extends State<TopSellingPage> {
                                     width: 40,
                                     child: InkWell(
                                         onTap: () {
-                                          if (productController
-                                              .productList
-                                              .isEmpty ||
-                                              productController
-                                                  .productList[
-                                              0]
-                                                  .storeId ==
-                                                  storeID) {
-                                            addProductToDatabase(
-                                                productName,
-                                                price,
-                                                mrp,
-                                                storeName,
-                                                productimg,
-                                                int.parse(type),
-                                                productId,
-                                                storeID,
-                                                unit,
-                                                1,
-                                                productAttributes);
-                                            productController
-                                                .fetchProducts();
-                                          } else {
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext
-                                              context) {
-                                                return ConstAlert(
-                                                  addedStore:
-                                                  productController
-                                                      .productList[
-                                                  0]
-                                                      .storeName
-                                                      .toString(),
-                                                  toAddStore:
-                                                  storeName,
-                                                  replaceOntap: () {
-                                                    deleteProduct();
-                                                    addProductToDatabase(
-                                                        productName,
-                                                        price,
-                                                        mrp,
-                                                        storeName,
-                                                        productimg,
-                                                        int.parse(
-                                                            type),
-                                                        productId,
-                                                        storeID,
-                                                        unit,
-                                                        1,
-                                                        productAttributes);
-                                                    Get.back();
-                                                    productController
-                                                        .fetchProducts();
-                                                  },
-                                                );
-                                              },
-                                            );
-                                          }
+                                          addProductToDatabase(
+                                              productName,
+                                              price,
+                                              mrp,
+                                              storeName,
+                                              productimg,
+                                              int.parse(type),
+                                              productId,
+                                              storeID,
+                                              unit,
+                                              1,
+                                              productAttributes);
                                         },
                                         child: const Card(
                                           elevation: 1,

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,11 +27,11 @@ class _RecProductPageState extends State<RecProductPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    recPController.fetchRecP();
+    // recPController.fetchRecP();
   }
 
-  String storeID = "";
-  String storeName = "";
+  // String storeID = "";
+  // String storeName = "";
   List quant = [];
 
   @override
@@ -45,7 +46,9 @@ class _RecProductPageState extends State<RecProductPage> {
               itemBuilder: (BuildContext context, index) {
                 final recP = recPController.recProduct[index];
                 final product = recP;
-
+                final String storeID = product['store_id'].toString();
+                final String storeName =
+                    "${product['store']['name']}";
                 var variantsDetails = recP['variantDetails'].toString();
                 var output = jsonDecode(variantsDetails);
                 var productName = recP['name'].toString();
@@ -79,6 +82,8 @@ class _RecProductPageState extends State<RecProductPage> {
                     }
                   }
                 }
+                // print(product);
+                // print("product");
 
                 return SizedBox(
                   width: 125,
@@ -94,12 +99,15 @@ class _RecProductPageState extends State<RecProductPage> {
                             children: [
                               Align(
                                   alignment: Alignment.topCenter,
-                                  child: Image.network(
-                                    recP['image'].toString(),
+                                  child:  CachedNetworkImage(
+                                    imageUrl:  recP['image'].toString(),
+                                    // placeholder: (context, url) => CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                                    // width: 60, // Specify the desired width
                                     height: 70,
-                                    // width: 70,
-                                    fit: BoxFit.fill,
-                                  )),
+                                    fit: BoxFit.cover,
+                                  ),
+                              ),
                             ],
                           ),
                           Text(
@@ -152,23 +160,25 @@ class _RecProductPageState extends State<RecProductPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                children: [
-                                  Text(
-                                    '₹${price.toInt()}',
-                                    style: AppTextStyles
-                                        .kCaption12SemiboldTextStyle,
-                                  ),
-                                  Text(
-                                    '₹${mrp.toInt()}',
-                                    style: AppTextStyles
-                                        .kSmall10RegularTextStyle
-                                        .copyWith(
-                                            color: AppColors.white60,
-                                            decoration:
-                                                TextDecoration.lineThrough),
-                                  ),
-                                ],
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      '₹${price.toInt()}',
+                                      style: AppTextStyles
+                                          .kCaption12SemiboldTextStyle,
+                                    ),
+                                    Text(
+                                      '₹${mrp.toInt()}',
+                                      style: AppTextStyles
+                                          .kSmall10RegularTextStyle
+                                          .copyWith(
+                                              color: AppColors.white60,
+                                              decoration:
+                                                  TextDecoration.lineThrough),
+                                    ),
+                                  ],
+                                ),
                               ),
                               !show
                                   ? SizedBox(
@@ -176,58 +186,18 @@ class _RecProductPageState extends State<RecProductPage> {
                                       width: 40,
                                       child: InkWell(
                                           onTap: () {
-                                            if (productController
-                                                    .productList.isEmpty ||
-                                                productController.productList[0]
-                                                        .storeId ==
-                                                    storeID) {
-                                              addProductToDatabase(
-                                                  productName,
-                                                  price,
-                                                  mrp,
-                                                  storeName,
-                                                  productimg,
-                                                  int.parse(type),
-                                                  productId,
-                                                  storeID,
-                                                  unit,
-                                                  1,
-                                                  productAttributes);
-                                              productController.fetchProducts();
-                                            } else {
-                                              showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return ConstAlert(
-                                                    addedStore:
-                                                        productController
-                                                            .productList[0]
-                                                            .storeName
-                                                            .toString(),
-                                                    toAddStore: storeName,
-                                                    replaceOntap: () {
-                                                      deleteProduct();
-                                                      addProductToDatabase(
-                                                          productName,
-                                                          price,
-                                                          mrp,
-                                                          storeName,
-                                                          productimg,
-                                                          int.parse(type),
-                                                          productId,
-                                                          storeID,
-                                                          unit,
-                                                          1,
-                                                          productAttributes);
-                                                      Get.back();
-                                                      productController
-                                                          .fetchProducts();
-                                                    },
-                                                  );
-                                                },
-                                              );
-                                            }
+                                            addProductToDatabase(
+                                                productName,
+                                                price,
+                                                mrp,
+                                                storeName,
+                                                productimg,
+                                                int.parse(type),
+                                                productId,
+                                                storeID,
+                                                unit,
+                                                1,
+                                                productAttributes);
                                           },
                                           child: const Card(
                                             elevation: 1,

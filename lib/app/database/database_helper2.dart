@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 class Product {
   final int? id;
@@ -55,7 +54,8 @@ class Product {
       "quantity": quantity,
       "attribute": attribute,
       "unit": unit,
-      "size": size
+      "size": size,
+      "storeId": storeId
       // Add other desired parameters here...
     };
   }
@@ -64,6 +64,8 @@ class Product {
 class ProductDatabase {
   static final ProductDatabase instance = ProductDatabase._init();
   static Database? _database;
+  // Map<String, List<Product>> productsByStore = {}; // Universal list by store
+
 
   ProductDatabase._init();
 
@@ -71,8 +73,21 @@ class ProductDatabase {
     if (_database != null) return _database!;
 
     _database = await _initDB('products.db');
+    // await _loadProductsByStore(); // Load products into productsByStore
     return _database!;
   }
+
+
+  // Future<void> _loadProductsByStore() async {
+  //   final products = await fetchProducts();
+  //   for (final product in products) {
+  //     final storeId = product.storeId ?? "";
+  //     if (!productsByStore.containsKey(storeId)) {
+  //       productsByStore[storeId] = [];
+  //     }
+  //     productsByStore[storeId]?.add(product);
+  //   }
+  // }
 
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();

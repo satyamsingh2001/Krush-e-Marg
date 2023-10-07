@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../colors/colors_const.dart';
@@ -74,8 +75,8 @@ class _WeatherWeekState extends State<WeatherWeek> {
                         .copyWith(color: AppColors.primary),
                   ),
                 ),
-                Image.network(
-                  weatherController.iconUrl,
+                CachedNetworkImage(
+                  imageUrl:weatherController.iconUrl,
                   height: 100,
                   width: 100,
                   fit: BoxFit.contain,
@@ -136,16 +137,18 @@ class _WeatherWeekState extends State<WeatherWeek> {
                         return true;
                       },
                       child: ListView.builder(
+                        physics: const BouncingScrollPhysics(),
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: true,
                           itemCount: weatherController.hourlyWeatherList.length,
                           itemBuilder: (context, index) {
                             final hourlyWeather = weatherController.hourlyWeatherList[index];
                             return ConstantContainer(
-                              color: AppColors.white40,
+                              color: AppColors.white20,
+                              borderColor: AppColors.primary,
                               radiusBorder: 10,
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
                                 child: Column(
                                   children: [
                                     Text(
@@ -193,14 +196,14 @@ class _WeatherWeekState extends State<WeatherWeek> {
                           .copyWith(color: AppColors.primary),
                     ),
                     Text(
-                      "Min/Max",
+                      "Avg. Temp",
                       style: AppTextStyles.kBody15RegularTextStyle
                           .copyWith(color: AppColors.primary),
                     ),
 
                   ],
                 ),
-        weatherController.hourlyWeatherList.isEmpty?Expanded(
+        Expanded(
                     child: ListView.separated(
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: weatherController.dailyWeatherList.length,
@@ -219,8 +222,8 @@ class _WeatherWeekState extends State<WeatherWeek> {
                                   dayOfWeek.toString().substring(0,3),
                                   style: AppTextStyles.kBody15RegularTextStyle.copyWith(color: AppColors.white80),
                                 ), // Display the daily icons
-                                Image.network(
-                                  dailyIcons.isNotEmpty ? dailyIcons[0] : '', // Display the first icon if available
+                                CachedNetworkImage(imageUrl:
+                                   dailyIcons[0], // Display the first icon if available
                                   height: 50,
                                   width: 50,
                                   fit: BoxFit.cover,
@@ -250,7 +253,7 @@ class _WeatherWeekState extends State<WeatherWeek> {
                         );
                       },
                     )
-                ):const CircularProgressIndicator(color: AppColors.primary,)
+                )
               ],
             ),
           ),

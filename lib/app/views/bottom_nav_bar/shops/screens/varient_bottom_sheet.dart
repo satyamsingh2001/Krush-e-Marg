@@ -33,7 +33,6 @@ class _VarientBottmSheetState extends State<VarientBottmSheet> {
     // SubCatController.fetchSubCat();
   }
 
-SubCatController subCatController = Get.put(SubCatController());
   // List<Product> productList = [];
   // void fetchProducts() async {
   //   final products = await ProductDatabase.instance.fetchProducts();

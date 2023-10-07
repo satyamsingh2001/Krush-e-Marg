@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:krush_e_marg/app/views/story/stories_details.dart';
@@ -11,7 +12,7 @@ class StoriesStore extends StatefulWidget {
 }
 
 class _StoryWidgetScrollState extends State<StoriesStore> {
-  StoryController storyController = Get.put(StoryController());
+  StoryController storyController = Get.find();
 
   @override
   void initState() {
@@ -93,7 +94,7 @@ class _StoryWidgetScrollState extends State<StoriesStore> {
                         decoration: BoxDecoration(
                           color: const Color(0xff7c94b6),
                           image: DecorationImage(
-                            image: NetworkImage(store
+                            image: CachedNetworkImageProvider(store
                                     ['storeImage']
                                 .toString()),
                             fit: BoxFit.fill,

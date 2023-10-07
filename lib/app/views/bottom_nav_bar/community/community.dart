@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -5,12 +6,12 @@ import 'package:intl/intl.dart';
 import 'package:krush_e_marg/app/controller/api_controller.dart';
 import 'package:krush_e_marg/app/views/bottom_nav_bar/community/comment_page.dart';
 import 'package:krush_e_marg/app/views/bottom_nav_bar/community/utils/utils.dart';
+
 import '../../../colors/colors_const.dart';
 import '../../../const/const_string.dart';
 import '../../../constwidgets/const_container.dart';
-import '../../../constwidgets/const_textfield.dart';
 import '../../../textstyles/textstyle_const.dart';
-import '../bottom_nav_bar.dart';
+import '../../CheckoutScreen/views/checkout_screen.dart';
 import '../reels/widgets/const_video_player.dart';
 import 'add_post.dart';
 import 'controller/api.dart';
@@ -31,9 +32,10 @@ class _CommunityState extends State<Community> {
   final UpdateLSController updateLSController = Get.find();
   final ToggleController toggleController = Get.find();
   final CommentController commentController = Get.put(CommentController());
-  final DeleteCommentController deleteCommentController = Get.put(DeleteCommentController());
-  final PostCommunityController postCommunityController = Get.put(PostCommunityController());
-
+  final DeleteCommentController deleteCommentController =
+      Get.put(DeleteCommentController());
+  final PostCommunityController postCommunityController =
+      Get.put(PostCommunityController());
 
   bool isDetailsVisible = false;
 
@@ -56,10 +58,8 @@ class _CommunityState extends State<Community> {
       backgroundColor: AppColors.white10,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const AddPost()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const AddPost()));
         },
         backgroundColor: AppColors.primary,
         child: Column(
@@ -81,16 +81,16 @@ class _CommunityState extends State<Community> {
         backgroundColor: AppColors.primary,
         title: const Text('Krush e Marge'),
         actions: [
-          InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const DashBoardScreenMain(
-                              currentIndex: 1,
-                            )));
-              },
-              child: const Icon(Icons.search)),
+          // InkWell(
+          //     onTap: () {
+          //       Navigator.push(
+          //           context,
+          //           MaterialPageRoute(
+          //               builder: (context) => const DashBoardScreenMain(
+          //                     currentIndex: 1,
+          //                   )));
+          //     },
+          //     child: const Icon(Icons.search)),
           const SizedBox(
             width: 10,
           ),
@@ -98,7 +98,11 @@ class _CommunityState extends State<Community> {
           const SizedBox(
             width: 10,
           ),
-          InkWell(onTap: () {}, child: const Icon(Icons.shopping_cart)),
+          InkWell(
+              onTap: () {
+                Get.to(const CheckoutScreeen());
+              },
+              child: const Icon(Icons.shopping_cart)),
           const SizedBox(
             width: 10,
           )
@@ -129,35 +133,43 @@ class _CommunityState extends State<Community> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ListTile(
-                          leading: CircleAvatar(
-                            radius: 25,
-                            backgroundColor: AppColors.white20,
-                            child: comm['profile_image_url'] != null
-                                ? Image.network(
-                                    '${comm['profile_image_url']}')
-                                :Image.asset(appLogo,fit: BoxFit.fill,height: 40,width: 40,),
-                            // const Icon(
-                            //         CupertinoIcons.profile_circled,
-                            //         color: AppColors.primary,
-                            //         size: 30,
-                            //       ),
-                          ),
-                          title: Text(
-                            comm['username'],
-                            // "User",
-                            style: AppTextStyles.kBody17SemiboldTextStyle
-                                .copyWith(color: AppColors.primary),
-                          ),
-                          subtitle: Text(
-                            DateFormat("hh:mm a").format(
-                                DateFormat("yyyy-MM-dd HH:mm:ss")
-                                    .parse(comm['updated_at'])),
-                            // comm['updated_at'].toString().substring(11,16),
-                            // "21 hr",
-                            style: AppTextStyles.kCaption12RegularTextStyle
-                                .copyWith(color: AppColors.white100),
-                          ),
-                        ),
+                            leading: CircleAvatar(
+                              radius: 25,
+                              backgroundColor: AppColors.white20,
+                              child: CachedNetworkImage(
+                                imageUrl: comm['profile_image_url'] ?? '',
+                                placeholder: (context, url) => Image.asset(
+                                  appLogo,
+                                  fit: BoxFit.fill,
+                                  height: 40,
+                                  width: 40,
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    Image.asset(
+                                  appLogo,
+                                  fit: BoxFit.fill,
+                                  height: 40,
+                                  width: 40,
+                                ),
+                                fit: BoxFit.fill,
+                                height: 40,
+                                width: 40,
+                              ),
+                            ),
+                            title: Text(
+                              comm['username'],
+                              // "User",
+                              style: AppTextStyles.kBody17SemiboldTextStyle
+                                  .copyWith(color: AppColors.primary),
+                            ),
+                            subtitle: Text(
+                              DateFormat("yyyy-MM-dd HH:mm").format(
+                                DateFormat("yyyy-MM-dd HH:mm")
+                                    .parse(comm['updated_at']),
+                              ),
+                              style: AppTextStyles.kCaption12RegularTextStyle
+                                  .copyWith(color: AppColors.white100),
+                            )),
                         const SizedBox(
                           height: 5,
                         ),
@@ -174,8 +186,9 @@ class _CommunityState extends State<Community> {
                                       borderRadius: BorderRadius.circular(10.0),
                                       child: cPostContent['type'].toString() ==
                                               'image'
-                                          ? Image.network(
-                                              cPostContent['image_video_url']
+                                          ? CachedNetworkImage(
+                                              imageUrl: cPostContent[
+                                                      'image_video_url']
                                                   .toString(),
                                               fit: BoxFit.cover,
                                               width: Get.width,
@@ -221,7 +234,7 @@ class _CommunityState extends State<Community> {
                         Align(
                           alignment: AlignmentDirectional.centerEnd,
                           child: InkWell(
-                            onTap:toggleDetailsVisibility,
+                            onTap: toggleDetailsVisibility,
                             child: SizedBox(
                               width: Get.width * 0.3,
                               child: Row(
@@ -232,8 +245,8 @@ class _CommunityState extends State<Community> {
                                         .copyWith(color: AppColors.white100),
                                   ),
                                   Icon(
-                                   isDetailsVisible
-                                    // communityController.isDetail[index1]
+                                    isDetailsVisible
+                                        // communityController.isDetail[index1]
                                         ? Icons.arrow_drop_up
                                         : Icons.arrow_drop_down,
                                     size: 30.0,
@@ -244,7 +257,7 @@ class _CommunityState extends State<Community> {
                           ),
                         ),
                         Visibility(
-                            visible:isDetailsVisible,
+                            visible: isDetailsVisible,
                             child: Text(
                               comm['discription'],
                               // "Hello,what's going on?",
@@ -284,10 +297,16 @@ class _CommunityState extends State<Community> {
                                   communityController.toggleLikeUnlike(index1);
                                   if (communityController.isLikedList[index1]) {
                                     updateLSController.updateLikeShare(
-                                        comm['id'], 'like', 'increment',comm['user_id']);
+                                        comm['id'],
+                                        'like',
+                                        'increment',
+                                        comm['user_id']);
                                   } else {
                                     updateLSController.updateLikeShare(
-                                        comm['id'], 'like', 'decrement',comm['user_id']);
+                                        comm['id'],
+                                        'like',
+                                        'decrement',
+                                        comm['user_id']);
                                   }
                                 },
                                 icon: communityController.isLikedList[index1]
@@ -298,14 +317,15 @@ class _CommunityState extends State<Community> {
                                     : const Icon(Icons.favorite_border)),
                             IconButton(
                                 onPressed: () {
-                                  Get.to(CommentPage(comment: comment,id:comm['id'].toString()));
+                                  Get.to(CommentPage(
+                                      comment: comment,
+                                      id: comm['id'].toString()));
                                 },
                                 icon: const Icon(CupertinoIcons.chat_bubble)),
                             IconButton(
                                 onPressed: () {
-
-                                  updateLSController.updateLikeShare(
-                                      comm['id'], 'share', 'increment',comm['user_id']);
+                                  updateLSController.updateLikeShare(comm['id'],
+                                      'share', 'increment', comm['user_id']);
                                   shareContent();
                                 },
                                 icon: const Icon(Icons.share)),

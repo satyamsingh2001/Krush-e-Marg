@@ -5,6 +5,7 @@ import 'package:krush_e_marg/app/views/bottom_nav_bar/product/soil_testing.dart'
 import '../../../colors/colors_const.dart';
 import '../../../const/const_string.dart';
 import '../../../textstyles/textstyle_const.dart';
+import '../../CheckoutScreen/views/checkout_screen.dart';
 import '../../story/stories_store.dart';
 import '../bottom_nav_bar.dart';
 import '../views/weather/weatherweekly.dart';
@@ -135,16 +136,16 @@ class _BottomProductState extends State<BottomProductPage> {
         backgroundColor: AppColors.primary,
         title: const Text('Krush e Marge'),
         actions: [
-          InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const DashBoardScreenMain(
-                              currentIndex: 1,
-                            )));
-              },
-              child: const Icon(Icons.search)),
+          // InkWell(
+          //     onTap: () {
+          //       Navigator.push(
+          //           context,
+          //           MaterialPageRoute(
+          //               builder: (context) => const DashBoardScreenMain(
+          //                     currentIndex: 1,
+          //                   )));
+          //     },
+          //     child: const Icon(Icons.search)),
           const SizedBox(
             width: 10,
           ),
@@ -152,7 +153,9 @@ class _BottomProductState extends State<BottomProductPage> {
           const SizedBox(
             width: 10,
           ),
-          InkWell(onTap: () {}, child: const Icon(Icons.shopping_cart)),
+          InkWell(onTap: () {
+            Get.to(const CheckoutScreeen());
+          }, child: const Icon(Icons.shopping_cart)),
           const SizedBox(
             width: 10,
           )
@@ -176,7 +179,7 @@ class _BottomProductState extends State<BottomProductPage> {
             const SizedBox(
               height: 15,
             ),
-            const BannerPageView(place: 'home_top',),
+             const BannerPageView(place: 'home_top',),
             const SizedBox(
               height: 15,
             ),

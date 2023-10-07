@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:krush_e_marg/app/views/bottom_nav_bar/views/manufacturers/controller/manuf_controller.dart';
@@ -13,12 +14,12 @@ class ManuFactPage extends StatefulWidget {
 }
 
 class _ManuFactPageState extends State<ManuFactPage> {
-  final ManufacturersController manufacturersController = Get.put(ManufacturersController());
+  final ManufacturersController manufacturersController = Get.find();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    manufacturersController.fetchManu();
+    // manufacturersController.fetchManu();
   }
   @override
   Widget build(BuildContext context) {
@@ -50,11 +51,13 @@ class _ManuFactPageState extends State<ManuFactPage> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(40),
-                      child: Image.network(
-                        manu['aadhar_img_url'].toString(),
+                      child:   CachedNetworkImage(
+                        imageUrl:   manu['aadhar_img_url'].toString(),
+                        // placeholder: (context, url) => CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                        width: 80, // Specify the desired width
                         height: 80,
-                        width: 80,
-                        fit: BoxFit.fill,
+                        fit: BoxFit.cover,
                       ),
                     ),
                     Text(

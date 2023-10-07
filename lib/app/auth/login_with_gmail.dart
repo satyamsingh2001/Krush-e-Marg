@@ -70,37 +70,36 @@ class _LoginWithGmailState extends State<LoginWithGmail> {
     );
   }
 
-  registerUser(String type, String email, String? name) async {
+  registerUser(String type, String email, String name) async {
     final response = await http.post(
-      Uri.parse("$baseurl/api/user/signup"),
+      Uri.parse("$baseurl/api/user/login"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
         "login_type": type,
         "email_phone": email,
-        "name": name!
-      }
-      ),
+        "name": name,
+      }),
     );
-    var data = jsonDecode(response.body);
     if (response.statusCode == 200) {
-      final prefs = await SharedPreferences.getInstance();
-      final userId =  data["data"]["id"].toString();
-      final type =  data["data"]["user_role"].toString();
-      final token =  data["data"]["token"].toString();
+      final data = jsonDecode(response.body);
+      if (data != null && data["data"] != null) {
+        final prefs = await SharedPreferences.getInstance();
+        final userId = data["data"]["id"].toString();
+        final type = data["data"]["user_role"].toString();
+        final token = data["data"]["token"].toString();
 
-
-      prefs.setString('userId', userId);
-      prefs.setString('type', type);
-      prefs.setString('barrierToken', token);
-      Get.offAll(const DashBoardScreenMain());
-      // Navigator.pushAndRemoveUntil(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => const MapPage()),
-      //         (route) => false);
+        prefs.setString('userId', userId);
+        prefs.setString('type', type);
+        prefs.setString('barrierToken', token);
+        Get.offAll(const DashBoardScreenMain());
+        print(data);
+      } else {
+        print("Data or data['data'] is null");
+      }
     } else {
-      // print('wrong otp');
+      print("HTTP request failed with status code ${response.statusCode}");
     }
   }
 

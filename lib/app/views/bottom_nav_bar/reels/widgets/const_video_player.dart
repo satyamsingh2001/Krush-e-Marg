@@ -56,16 +56,14 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: _toggleVideoPlayback,
-              child: _videoPlayerController.value.isInitialized
-                  ? AspectRatio(
-                aspectRatio: _videoPlayerController.value.aspectRatio,
-                child: VideoPlayer(_videoPlayerController),
-              )
-                  : circularIndicator(), // Show a loading indicator until the video is initialized
-            ),
+          GestureDetector(
+            onTap: _toggleVideoPlayback,
+            child: _videoPlayerController.value.isInitialized
+                ? AspectRatio(
+              aspectRatio: _videoPlayerController.value.aspectRatio,
+              child: VideoPlayer(_videoPlayerController),
+            )
+                : circularIndicator(), // Show a loading indicator until the video is initialized
           ),
           Visibility(
             visible: !_videoPlayerController.value.isPlaying,

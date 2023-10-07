@@ -1,14 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:krush_e_marg/app/controller/api_controller.dart';
-
+import 'package:krush_e_marg/app/controller/product_db_controller.dart';
 import '../../../../colors/colors_const.dart';
-import '../../../../test2.dart';
 import '../../../../textstyles/textstyle_const.dart';
+import '../../../CheckoutScreen/views/checkout_screen.dart';
 import '../../views/recom_prod/rec_prod.dart';
 import '../../views/top_sellling/top_sell_page.dart';
 import '../../widgets/banner_pageview.dart';
-import 'package:krush_e_marg/app/controller/product_db_controller.dart';
 import 'product_list.dart';
 
 class ShopPage extends StatefulWidget {
@@ -36,83 +36,40 @@ class _ShopPageState extends State<ShopPage> {
     setState(() {
       searchText = text;
     });
-    print('Search Text: $searchText'); // Add this line
   }
 
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-        toolbarHeight: 80,
-        title: SizedBox(
-          height: 50,
-          child: Row(
-            children: [
-              SizedBox(
-                width: size.width * 0.7,
-                child: TextFormField(
-                  controller: searchController,
-                  onChanged: onSearchTextChanged,
-                  decoration: InputDecoration(
-                    contentPadding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                    fillColor: const Color.fromRGBO(203, 212, 225, 1),
-                    hintText: 'Search for any categories',
-                    hintStyle: const TextStyle(fontSize: 14),
-                    suffixIcon:
-                    const Icon(Icons.search, color: AppColors.primary),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(
-                        color: AppColors.white40,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+        backgroundColor: AppColors.primary,
+        title: const Text('Krush e Marge'),
         actions: [
-          InkWell(
-            onTap: () {},
-            child: const Icon(
-              Icons.notifications,
-              color: AppColors.primary,
-            ),
-          ),
+          // InkWell(
+          //     // onTap: () {
+          //     //   Navigator.push(
+          //     //       context,
+          //     //       MaterialPageRoute(
+          //     //           builder: (context) => const DashBoardScreenMain(
+          //     //             currentIndex: 1,
+          //     //           )));
+          //     // },
+          //     child: const Icon(Icons.search)),
           const SizedBox(
-            width: 12,
+            width: 10,
           ),
-          InkWell(
-            onTap: () {},
-            child: const Icon(
-              Icons.shopping_cart,
-              color: AppColors.primary,
-            ),
-          ),
+          InkWell(onTap: () {}, child: const Icon(Icons.notifications)),
           const SizedBox(
-            width: 12,
+            width: 10,
+          ),
+          GestureDetector(onTap: () {
+            Get.to(const CheckoutScreeen());
+          }, child: const Icon(Icons.shopping_cart)),
+          const SizedBox(
+            width: 10,
           )
         ],
-        elevation: 0,
-        backgroundColor: AppColors.white10,
       ),
       body: GetBuilder<CategoriesController>(
         builder: (categoriesController) {
@@ -123,6 +80,7 @@ class _ShopPageState extends State<ShopPage> {
             },
             child: ListView(
               children: [
+                const SizedBox(height: 20,),
                  SizedBox(
                   height: 100,
                   child: ListView.builder(
@@ -136,7 +94,7 @@ class _ShopPageState extends State<ShopPage> {
                         subCatController.fetchSubCat(cat['id'].toString(),);
 
                         Get.to( ProductList(
-                          catId: cat['id'].toString(),
+                          catId: '${cat['id']}',
 
                         ));
                       },
@@ -161,12 +119,15 @@ class _ShopPageState extends State<ShopPage> {
                           children: [
                             ClipRRect(
                               borderRadius: BorderRadius.circular(30),
-                              child: Image.network(
-                                cat['image_url'],
+                              child:  CachedNetworkImage(
+                                imageUrl: cat['image_url'],
+                                // placeholder: (context, url) => CircularProgressIndicator(),
+                                errorWidget: (context, url, error) => const Icon(Icons.error),
+                                width: 60, // Specify the desired width
                                 height: 60,
-                                width: 60,
-                                fit: BoxFit.fill,
+                                fit: BoxFit.cover,
                               ),
+
                             ),
                             Text(
                               cat['name'] ?? '',
@@ -188,7 +149,7 @@ class _ShopPageState extends State<ShopPage> {
                 const Divider(
                   thickness: 1,
                 ),
-                const BannerPageView(
+                 const BannerPageView(
                   place: 'shop_bottom',
                 ),
                 const SizedBox(
@@ -217,14 +178,14 @@ class _ShopPageState extends State<ShopPage> {
                 title,
                 style: AppTextStyles.kBody15SemiboldTextStyle,
               ),
-              TextButton(
-                onPressed: onTap,
-                child: Text(
-                  'View All',
-                  style: AppTextStyles.kCaption12RegularTextStyle
-                      .copyWith(color: AppColors.primary),
-                ),
-              ),
+              // TextButton(
+              //   onPressed: onTap,
+              //   child: Text(
+              //     'View All',
+              //     style: AppTextStyles.kCaption12RegularTextStyle
+              //         .copyWith(color: AppColors.primary),
+              //   ),
+              // ),
             ],
           ),
         ),

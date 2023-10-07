@@ -8,14 +8,15 @@ import '../../../controller/api_controller.dart';
 import '../../CheckoutScreen/views/checkout_screen.dart';
 import '../../drawer/drawer.dart';
 import '../../story/stories_store.dart';
-import '../bottom_nav_bar.dart';
 import '../widgets/banner_pageview.dart';
+import 'manufacturers/controller/manuf_controller.dart';
 import 'manufacturers/manufact_page.dart';
 import 'recom_prod/controller/recom_controller.dart';
 import 'recom_prod/rec_prod.dart';
 import 'top_sellling/controller/top_selling_controller.dart';
 import 'top_sellling/top_sell_page.dart';
 import 'weather/controller/location_controller.dart';
+import 'weather/controller/weather_controller.dart';
 import 'weather/weather.dart';
 
 class HomePage extends StatefulWidget {
@@ -31,27 +32,42 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       loadStrings();
-      // controller.fetchBanner();
-      adminOfferController.adminOffer();
+      updateController.fetchUpdates();
+      storyController.fetchStory();
       categoriesController.fetchCat();
+      recPController.fetchRecP();
+      topSellingController.fetchTopSell();
+      manufacturersController.fetchManu();
+
+
+
+      // controller.fetchBanner();
+      // adminOfferController.adminOffer();
       // SubCatController.fetchSubCat();
       addressController.fetchSavedAddress();
       storyController.fetchStory();
-      moduleController.fetchModules();
+      // moduleController.fetchModules();
     });
   }
 
   // BannerController controller = Get.put(BannerController());
   final TopSellingController topSellingController = Get.put(TopSellingController());
+  final ManufacturersController manufacturersController = Get.put(ManufacturersController());
 
   final SubCatController subCatController = Get.put(SubCatController());
   final RecPController recPController = Get.put(RecPController());
-  AdminOfferController adminOfferController = Get.put(AdminOfferController());
+  // AdminOfferController adminOfferController = Get.put(AdminOfferController());
   CategoriesController categoriesController = Get.put(CategoriesController());
   LocationController locationController = Get.put(LocationController());
   AddressController addressController = Get.put(AddressController());
   StoryController storyController = Get.put(StoryController());
-  ModuleController moduleController = Get.put(ModuleController());
+  // ModuleController moduleController = Get.put(ModuleController());
+  final UpdateController updateController = Get.put(UpdateController());
+  final BannerController bannerController = Get.put(BannerController());
+  final WeatherController weatherController = Get.put(WeatherController());
+
+
+
 
 
   @override
@@ -62,16 +78,16 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: AppColors.primary,
         title: const Text('Krush e Marge'),
         actions: [
-          InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const DashBoardScreenMain(
-                              currentIndex: 1,
-                            )));
-              },
-              child: const Icon(Icons.search)),
+          // InkWell(
+          //     onTap: () {
+          //       Navigator.push(
+          //           context,
+          //           MaterialPageRoute(
+          //               builder: (context) => const DashBoardScreenMain(
+          //                     currentIndex: 1,
+          //                   )));
+          //     },
+          //     child: const Icon(Icons.search)),
           const SizedBox(
             width: 10,
           ),
@@ -79,7 +95,7 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(
             width: 10,
           ),
-          InkWell(onTap: () {
+          GestureDetector(onTap: () {
             Get.to(const CheckoutScreeen());
           }, child: const Icon(Icons.shopping_cart)),
           const SizedBox(
@@ -110,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(
                     height: 15,
                   ),
-                  const BannerPageView(
+                   const BannerPageView(
                     place: "home_top",
                   ),
                   const SizedBox(
@@ -131,56 +147,13 @@ class _HomePageState extends State<HomePage> {
                   const WeatherCondition(),
                   title('Manufacturers', () {}),
                   const ManuFactPage(),
-                  // GridView.builder(
-                  //   shrinkWrap: true,
-                  //   physics: const NeverScrollableScrollPhysics(),
-                  //   padding: const EdgeInsets.all(8),
-                  //   gridDelegate:
-                  //       const SliverGridDelegateWithFixedCrossAxisCount(
-                  //           crossAxisCount: 3,
-                  //           mainAxisSpacing: 8.0,
-                  //           crossAxisSpacing: 8.0,
-                  //           childAspectRatio: 0.9),
-                  //   itemCount: test_img.length,
-                  //   itemBuilder: (context, index) {
-                  //     return GestureDetector(
-                  //       onTap: () {},
-                  //       child: Container(
-                  //         decoration: BoxDecoration(
-                  //             color: AppColors.white20,
-                  //             borderRadius: BorderRadius.circular(10),
-                  //             border: Border.all(
-                  //                 width: 0.5, color: AppColors.primary)),
-                  //         child: Column(
-                  //           mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  //           children: [
-                  //             ClipRRect(
-                  //               borderRadius: BorderRadius.circular(40),
-                  //               child: Image.asset(
-                  //                 test_img[index],
-                  //                 height: 80,
-                  //                 width: 80,
-                  //                 fit: BoxFit.fill,
-                  //               ),
-                  //             ),
-                  //             Text(
-                  //               'suraj',
-                  //               style: AppTextStyles.kBody17SemiboldTextStyle
-                  //                   .copyWith(color: AppColors.white100),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //     );
-                  //   },
-                  // ),
                   const SizedBox(
                     height: 15,
                   ),
                   const Divider(
                     thickness: 1,
                   ),
-                  const BannerPageView(
+                   const BannerPageView(
                     place: "home_bottom",
                   ),
                   const SizedBox(

@@ -1,12 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:krush_e_marg/app/textstyles/textstyle_const.dart';
 
 import '../../../colors/colors_const.dart';
 import '../../../controller/api_controller.dart';
-import '../../../test2.dart';
 import '../shops/views/product_list.dart';
-import '../shops/views/store_list.dart';
 
 class CategoryList extends StatefulWidget {
   const CategoryList({Key? key}) : super(key: key);
@@ -19,7 +18,7 @@ class _CategoryListState extends State<CategoryList> {
   @override
   void initState() {
     super.initState();
-    categoriesController.fetchCat();
+    // categoriesController.fetchCat();
     // categoriesController.fetchCategories();
   }
 
@@ -73,15 +72,15 @@ class _CategoryListState extends State<CategoryList> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(30),
-                          child: Image.network(
-                            cat['image_url'],
-                            height: 60,
-                            width: 60,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
+                      CachedNetworkImage(
+                      imageUrl:  cat['image_url'], // Replace with your image URL
+                      // placeholder: (context, url) => CircularProgressIndicator(), // Placeholder while loading
+                      errorWidget: (context, url, error) => const Icon(Icons.error), // Error widget
+                      width: 60, // Specify the desired width
+                      height: 60, // Specify the desired height
+                      fit: BoxFit.cover, // Specify the desired fit
+                    ),
+
                         Text(
                           cat['name'] ?? '',
                           style: AppTextStyles.kSmall10RegularTextStyle,
