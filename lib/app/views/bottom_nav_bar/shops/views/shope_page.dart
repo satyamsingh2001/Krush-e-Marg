@@ -144,17 +144,12 @@ class _ShopPageState extends State<ShopPage> {
                 ),
                 title('Recommended Products', () {}),
                 const RecProductPage(),
-                title('Top Selling Products', () {}),
-                const TopSellingPage(),
-                const Divider(
-                  thickness: 1,
-                ),
-                 const BannerPageView(
+                const BannerPageView(
                   place: 'shop_bottom',
                 ),
-                const SizedBox(
-                  height: 50,
-                )
+                title('Top Selling Products', () {}),
+                const TopSellingPage(),
+
               ],
             ),
           );

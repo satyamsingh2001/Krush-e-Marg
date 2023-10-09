@@ -11,6 +11,9 @@ const String currentWeatherBaseUrl =
 const String hourlyWeatherBaseUrl =
     "https://api.openweathermap.org/data/2.5/forecast";
 
+// https://api.openweathermap.org/data/2.5/weather?q=Noida&appid=8f3fea103035e0d8ec6058593eb444f4
+
+
 class WeatherController extends GetxController {
   late RxMap mainData = {}.obs;
   RxList weatherData = [].obs;
@@ -21,10 +24,10 @@ class WeatherController extends GetxController {
 
   final LocationController locationController = Get.put(LocationController());
 
-  String get currentCity => locationController.currentAddress.value;
+  String get currentCity => locationController.currentAddress.value.split(',')[0].trim();
 
   String get currentWeatherUrl =>
-      "$currentWeatherBaseUrl?q=noida&appid=$apiKey";
+      "$currentWeatherBaseUrl?q=$currentCity&appid=$apiKey";
 
   String get hourlyWeatherUrl =>
       "$hourlyWeatherBaseUrl?q=$currentCity&appid=$apiKey";
@@ -33,6 +36,7 @@ class WeatherController extends GetxController {
     try {
       final response = await http.get(Uri.parse(currentWeatherUrl));
 
+      print(currentWeatherUrl);
 
       final data = json.decode(response.body);
       if (response.statusCode == 200) {
@@ -45,14 +49,14 @@ class WeatherController extends GetxController {
         update();
       } else {
 
-        Get.rawSnackbar(
-          messageText: Text('Failed to load weather data: ${response.statusCode}'),
-          borderRadius: 8.0,
-          backgroundColor: Colors.redAccent,
-          padding: const EdgeInsets.all(16.0),
-          margin: const EdgeInsets.only(bottom: 20.0),
-          duration: const Duration(seconds: 3),
-        );
+        // Get.rawSnackbar(
+        //   messageText: Text('Failed to load weather data: ${response.statusCode}'),
+        //   borderRadius: 8.0,
+        //   backgroundColor: Colors.redAccent,
+        //   padding: const EdgeInsets.all(16.0),
+        //   margin: const EdgeInsets.only(bottom: 20.0),
+        //   duration: const Duration(seconds: 3),
+        // );
       }
     } catch (e) {
       // Handle network or other exceptions here
@@ -110,7 +114,7 @@ class WeatherController extends GetxController {
         }).toList());
         calculateDailyWeather();
       } else {
-        throw Exception('Failed to load data: ${response.statusCode}');
+        // throw Exception('Failed to load data: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('Error fetching data: $e');

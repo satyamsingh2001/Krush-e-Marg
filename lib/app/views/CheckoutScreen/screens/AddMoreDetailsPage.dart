@@ -226,7 +226,7 @@ class _AddMoreDetailsPageState extends State<AddMoreDetailsPage> {
     );
     var data = jsonDecode(response.body);
     if (response.statusCode == 200) {
-      print(data);
+      // print(data);
       Get.off(const CheckoutScreeen());
     } else {
       if (kDebugMode) {

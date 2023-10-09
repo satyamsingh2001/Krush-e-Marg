@@ -1,10 +1,9 @@
-import 'package:krush_e_marg/app/colors/colors_const.dart';
-import 'package:krush_e_marg/app/textstyles/textstyle_const.dart';
-import 'package:krush_e_marg/app/constwidgets/container_widget.dart';
-import 'package:krush_e_marg/app/views/Your%20Order/views/track_order.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:krush_e_marg/app/colors/colors_const.dart';
+import 'package:krush_e_marg/app/constwidgets/container_widget.dart';
+import 'package:krush_e_marg/app/textstyles/textstyle_const.dart';
 
 import '../controller/order_api_controller.dart';
 import 'order_details.dart';
@@ -22,20 +21,20 @@ class _YourOrderState extends State<YourOrder> {
     // TODO: implement initState
     super.initState();
     // fetchOrderList();
-    orderApiController.fetchOrderList();
+    // orderApiController.fetchOrderList();
   }
 
-  OrderApiController orderApiController = Get.put(OrderApiController());
+  OrderApiController orderApiController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.5,
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.primary,
         title: Text(
           'Your Orders',
           style: AppTextStyles.kBody20RegularTextStyle
-              .copyWith(color: AppColors.white100),
+              .copyWith(color: AppColors.white),
         ),
         centerTitle: true,
       ),
@@ -44,7 +43,7 @@ class _YourOrderState extends State<YourOrder> {
           return ListView.builder(
             physics: const BouncingScrollPhysics(),
               itemCount: orderApiController.orderHistory.length,
-              itemBuilder: (BuildContext contex, index) {
+              itemBuilder: (BuildContext context, index) {
                 final order = orderApiController.orderHistory[index];
                 final String orderDate = order['order_date'].toString();
                 DateTime parsedDateTime = DateTime.parse(orderDate);
@@ -66,14 +65,16 @@ class _YourOrderState extends State<YourOrder> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
-                                  'Order ID: ${order['id']}',
+                                  'Order ID: ${order['id']}'.toString(),
                                   style: AppTextStyles.kBody17SemiboldTextStyle,
                                 ),
                                 Text(
+                                 // " order['store']['name'].toString()",
                                   order['store']['name'].toString(),
                                   style: AppTextStyles.kBody15RegularTextStyle,
                                 ),
                                 Text(
+                                  // "date",
                                     formattedDateTime,
                                   style: AppTextStyles.kCaption12RegularTextStyle
                                       .copyWith(color: AppColors.white60),
@@ -88,11 +89,13 @@ class _YourOrderState extends State<YourOrder> {
                                     backgroundColor: Colors.white,
                                   ),
                                   onPressed: () {
-                                    if (index == 0) {
-                                      Get.to(TrackOrder(order: order,));
-                                    }else{
-                                      Get.to(OrderDetails(order: order,));
-                                    }
+                                    Get.to(OrderDetails(order: order,));
+
+                                    // if (index == 0) {
+                                    //   Get.to(TrackOrder(order: order,));
+                                    // }else{
+                                    //   Get.to(OrderDetails(order: order,));
+                                    // }
                                   },
                                   child: Text(
                                     orderApiController.viewOrder[index],
@@ -133,13 +136,14 @@ class _YourOrderState extends State<YourOrder> {
                                     ),
                                     Container(
                                         decoration: BoxDecoration(
-                                          color: AppColors.white40,
+                                          color: AppColors.white,
                                           borderRadius: BorderRadius.circular(4),
                                         ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(5.0),
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(5.0),
                                           child: Text(
-                                            order['order_status'].toString(),
+                                            "",
+                                            // order['order_status'].toString(),
                                             style: AppTextStyles
                                                 .kCaption12RegularTextStyle,
                                           ),
@@ -152,7 +156,8 @@ class _YourOrderState extends State<YourOrder> {
                         ),
                       ),
                     ],
-                  )),
+                  )
+                  ),
                 );
               });
         }

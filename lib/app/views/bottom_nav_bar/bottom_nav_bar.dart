@@ -25,7 +25,6 @@ class _DashBoardScreenMainState extends State<DashBoardScreenMain> {
   final CommunityController communityController = Get.put(CommunityController());
   final CategoriesController categoriesController = Get.put(CategoriesController());
   final ProductController productController = Get.put(ProductController());
-
   final UpdateLSController updateLSController = Get.put(UpdateLSController());
   final ToggleController toggleController = Get.put(ToggleController());
   late int currentIndex;

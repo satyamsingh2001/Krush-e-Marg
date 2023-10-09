@@ -38,7 +38,8 @@ class _ManuFactPageState extends State<ManuFactPage> {
           itemCount: manufacturersController.manuList.length,
           itemBuilder: (context, index) {
             final manu = manufacturersController.manuList[index];
-            return GestureDetector(
+            return index <9
+                ? GestureDetector(
               onTap: () {},
               child: Container(
                 decoration: BoxDecoration(
@@ -68,7 +69,7 @@ class _ManuFactPageState extends State<ManuFactPage> {
                   ],
                 ),
               ),
-            );
+            ):const SizedBox(height: 0,);
           },
         );
       }

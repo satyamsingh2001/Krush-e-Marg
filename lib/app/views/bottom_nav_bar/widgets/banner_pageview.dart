@@ -84,14 +84,14 @@ class _BannerPageViewState extends State<BannerPageView> {
     Size size = MediaQuery.of(context).size;
 
     return SizedBox(
-      height: size.height * 0.2,
+      height: size.height * 0.1,
       width: size.width,
       child: CarouselSlider.builder(
         options: CarouselOptions(
             enlargeCenterPage: true,
             enableInfiniteScroll: true,
             viewportFraction: 0.8,
-            autoPlay: true),
+            autoPlay: false),
         itemCount: bannerImage.length,
         itemBuilder: (BuildContext context, int index, int realIndex) {
           return GestureDetector(

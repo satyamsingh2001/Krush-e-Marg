@@ -29,7 +29,7 @@ class SuccessAlert extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 CustomBtn(btnTitle: 'Go to Home', onTap: () {Get.offAll(const DashBoardScreenMain()); }, btnColor: AppColors.primary600,),
-                CustomBtn(btnTitle: 'Track Order', onTap: (){ Get.offAll(const DashBoardScreenMain(currentIndex: 3,));}, btnColor: AppColors.success20,)
+                CustomBtn(btnTitle: 'Track Order', onTap: (){ Get.offAll(const DashBoardScreenMain(currentIndex: 1,));}, btnColor: AppColors.success20,)
               ],
             )
           ],

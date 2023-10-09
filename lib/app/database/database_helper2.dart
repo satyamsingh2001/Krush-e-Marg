@@ -48,14 +48,15 @@ class Product {
 
   Map<String, dynamic> toMapForApi() {
     return {
-      "product_name": name,
-      "product_id": productId,
-      "price": price,
-      "quantity": quantity,
-      "attribute": attribute,
-      "unit": unit,
-      "size": size,
-      "storeId": storeId
+      "product_name": "$name",
+      "product_id": "$productId",
+      "price": "$price",
+      "quantity": "$quantity",
+      "attribute": "$attribute",
+      "unit": "$unit",
+      "size": "$size",
+      "store_id": "$storeId",
+      "product_amount": '${quantity! * price!}'
       // Add other desired parameters here...
     };
   }

@@ -174,9 +174,18 @@ class AddressController extends GetxController {
     });
 
     fetchAddress = jsonDecode(response.body)['data'];
-    address =
-        "${fetchAddress[0]['house_floor_no'] ?? ''} ${fetchAddress[0]['name'] ?? ''} ${fetchAddress[0]['landmark'] ?? ''} ${fetchAddress[0]['map']}";
-    label = fetchAddress[0]['label'].toString();
+    if (fetchAddress.isNotEmpty) {
+      address =
+      "${fetchAddress[0]['house_floor_no'] ?? ''} ${fetchAddress[0]['name'] ?? ''} ${fetchAddress[0]['landmark'] ?? ''} ${fetchAddress[0]['map']}";
+
+      // Check if the label is null or empty and set a default value
+      label = fetchAddress[0]['label']?.toString() ?? "Other";
+    } else {
+      // If there are no addresses, set default values
+      address = "";
+      label = "Other";
+    }
+
     if (response.statusCode == 200) {
       update();
     } else {

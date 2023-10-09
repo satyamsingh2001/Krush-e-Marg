@@ -11,6 +11,8 @@ import '../../colors/colors_const.dart';
 import '../../constwidgets/const_container.dart';
 import '../../textstyles/textstyle_const.dart';
 import '../CheckoutScreen/screens/addnewaddress.dart';
+import '../Your Order/controller/order_api_controller.dart';
+import '../Your Order/views/your_orders.dart';
 
 class ConstDrawer extends StatefulWidget {
   const ConstDrawer({Key? key}) : super(key: key);
@@ -22,7 +24,14 @@ class ConstDrawer extends StatefulWidget {
 class _ConstDrawerState extends State<ConstDrawer> {
 
   final UpdateController updateController = Get.find();
+  OrderApiController orderApiController = Get.put(OrderApiController());
 
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    orderApiController.fetchOrderList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +75,9 @@ class _ConstDrawerState extends State<ConstDrawer> {
               // constListTile(Icons.home, "Home", () {
               //   Get.back();
               // }),
-              constListTile(Icons.list_alt, "My Order", () {}),
+              constListTile(Icons.list_alt, "My Order", () {
+                Get.to(const YourOrder());
+              }),
               constListTile(Icons.location_on_outlined, "My Address", () {
                 Get.to(const AddNewAddresMap());
               }),

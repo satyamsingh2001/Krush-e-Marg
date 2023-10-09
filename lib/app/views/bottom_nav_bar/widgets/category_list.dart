@@ -37,13 +37,13 @@ class _CategoryListState extends State<CategoryList> {
             shrinkWrap: true,
             itemCount: categoriesController.categoriesList.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
+              crossAxisCount: 3,
               mainAxisSpacing: 6,
               crossAxisSpacing: 6,
             ),
               itemBuilder: (context,index){
                 final cat = categoriesController.categoriesList[index];
-                return index <=categoriesController.categoriesList.length
+                return index <9
                     ? GestureDetector(
                   onTap: () {
                     subCatController.fetchSubCat(cat['id'].toString(),);
@@ -89,7 +89,7 @@ class _CategoryListState extends State<CategoryList> {
                     ),
                   ),
                 )
-                    : null;
+                    : const SizedBox(height: 0,);
               }
           ),
         );

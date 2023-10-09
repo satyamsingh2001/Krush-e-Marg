@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:krush_e_marg/app/constwidgets/container_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -89,14 +90,14 @@ class _OrderDetailsState extends State<OrderDetails> {
                         lightText('Order from'),
                         darkText(orderData['store']['name'].toString(),),
 
-                        lightText('Order status'),
-                        darkText(orderData['order_status'].toString()),
+                        // lightText('Order status'),
+                        // darkText(orderData['order_status'].toString()),
 
                         lightText('Delivering at'),
                         darkText(orderData['address'].toString()),
 
-                        lightText('Delivery Instructions'),
-                        darkText(orderData['instruction'].toString()),
+                        // lightText('Delivery Instructions'),
+                        // darkText(orderData['instruction'].toString()),
 
                         lightText('Date & Time'),
                         darkText(formattedDateTime),
@@ -119,15 +120,15 @@ class _OrderDetailsState extends State<OrderDetails> {
                     physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: orderDetails.length,
-                      itemBuilder: (BuildContext contex,index){
+                      itemBuilder: (BuildContext context,index){
                       final orderList = orderDetails[index];
                       String quantity = orderList['size'].toString()+orderList['unit'].toString();
                       String price = '${orderList['price']*orderList['quantity']}';
                     return ListTile(
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(5),
-                        child: Image.network(
-                          orderList['product']['image'].toString(),
+                        child: CachedNetworkImage(
+                         imageUrl: orderList['product']['image'].toString(),
                           height: 80,
                           width: 70,
                            fit: BoxFit.fill),

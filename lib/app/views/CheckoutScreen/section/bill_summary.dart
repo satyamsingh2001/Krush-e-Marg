@@ -65,83 +65,83 @@ class _BillSummaryState extends State<BillSummary> {
                   ),
                   const Spacer(),
                   Text(
-                    '₹$price',
+                    '₹${price.toStringAsFixed(2)}',
                     style:
                     AppTextStyles.kBody15RegularTextStyle,
                   ),
                 ],
               ),
-              Row(
-                mainAxisAlignment:
-                MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Handling Charge',
-                    style: AppTextStyles.kCaption12RegularTextStyle
-                        .copyWith(color: AppColors.white60),
-                  ),
-
-                 const Spacer(),
-                  const SizedBox(width: 5,),
-                  Text(
-                    '₹${orderData['package_fees']}',
-                    style: AppTextStyles.kCaption12RegularTextStyle
-                        .copyWith(color: AppColors.white100),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 3,),
-              Row(
-                mainAxisAlignment:
-                MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Delivery fee',
-                    style: AppTextStyles.kCaption12RegularTextStyle
-                        .copyWith(color: AppColors.white60),
-                  ),
-
-                 const Spacer(),
-                  Text(
-                    '₹${orderData['shipping_charges']}',
-                    style: AppTextStyles.kCaption12RegularTextStyle
-                        .copyWith(color: AppColors.white100),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 3,),
-              Row(
-                children: [
-                  Text(
-                    'Delivery Partner Tip',
-                    style: AppTextStyles.kCaption12RegularTextStyle
-                        .copyWith(color: AppColors.white60),
-                  ),
-                const Spacer(),
-                  Text(
-                    '₹${orderData['delivery_tip']}',
-                    style: AppTextStyles.kCaption12RegularTextStyle
-                        .copyWith(color: AppColors.white60),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 5,),
-
-              const Divider(),
-              Row(
-                children: [
-                  Text(
-                    'Offer Discount',
-                    style: AppTextStyles.kCaption12RegularTextStyle
-                        .copyWith(color: AppColors.success40),
-                  ),
-                  const Spacer(),
-                  Text(
-                    '- ₹${orderData['coupon_discount']}',
-                    style: AppTextStyles.kCaption12SemiboldTextStyle,
-                  ),
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment:
+              //   MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Text(
+              //       'Handling Charge',
+              //       style: AppTextStyles.kCaption12RegularTextStyle
+              //           .copyWith(color: AppColors.white60),
+              //     ),
+              //
+              //    const Spacer(),
+              //     const SizedBox(width: 5,),
+              //     Text(
+              //       '₹${orderData['package_fees']}',
+              //       style: AppTextStyles.kCaption12RegularTextStyle
+              //           .copyWith(color: AppColors.white100),
+              //     ),
+              //   ],
+              // ),
+              // const SizedBox(height: 3,),
+              // Row(
+              //   mainAxisAlignment:
+              //   MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Text(
+              //       'Delivery fee',
+              //       style: AppTextStyles.kCaption12RegularTextStyle
+              //           .copyWith(color: AppColors.white60),
+              //     ),
+              //
+              //    const Spacer(),
+              //     Text(
+              //       '₹${orderData['shipping_charges']}',
+              //       style: AppTextStyles.kCaption12RegularTextStyle
+              //           .copyWith(color: AppColors.white100),
+              //     ),
+              //   ],
+              // ),
+              // const SizedBox(height: 3,),
+              // Row(
+              //   children: [
+              //     Text(
+              //       'Delivery Partner Tip',
+              //       style: AppTextStyles.kCaption12RegularTextStyle
+              //           .copyWith(color: AppColors.white60),
+              //     ),
+              //   const Spacer(),
+              //     Text(
+              //       '₹${orderData['delivery_tip']}',
+              //       style: AppTextStyles.kCaption12RegularTextStyle
+              //           .copyWith(color: AppColors.white60),
+              //     ),
+              //   ],
+              // ),
+              // const SizedBox(height: 5,),
+              //
+              // const Divider(),
+              // Row(
+              //   children: [
+              //     Text(
+              //       'Offer Discount',
+              //       style: AppTextStyles.kCaption12RegularTextStyle
+              //           .copyWith(color: AppColors.success40),
+              //     ),
+              //     const Spacer(),
+              //     Text(
+              //       '- ₹${orderData['coupon_discount']}',
+              //       style: AppTextStyles.kCaption12SemiboldTextStyle,
+              //     ),
+              //   ],
+              // ),
 
               Row(
                 mainAxisAlignment:

@@ -9,8 +9,10 @@ import '../../CheckoutScreen/views/checkout_screen.dart';
 import '../../drawer/drawer.dart';
 import '../../story/stories_store.dart';
 import '../widgets/banner_pageview.dart';
+import '../widgets/view_categories.dart';
 import 'manufacturers/controller/manuf_controller.dart';
 import 'manufacturers/manufact_page.dart';
+import 'manufacturers/view_manufactures.dart';
 import 'recom_prod/controller/recom_controller.dart';
 import 'recom_prod/rec_prod.dart';
 import 'top_sellling/controller/top_selling_controller.dart';
@@ -38,7 +40,10 @@ class _HomePageState extends State<HomePage> {
       recPController.fetchRecP();
       topSellingController.fetchTopSell();
       manufacturersController.fetchManu();
-
+      weatherController.fetchCurrentWeatherData();
+      weatherController.fetchHourlyWeather();
+      locationController.requestLocationPermissions();
+      locationController.getCurrentLocation();
 
 
       // controller.fetchBanner();
@@ -133,19 +138,21 @@ class _HomePageState extends State<HomePage> {
                     height: 15,
                   ),
                   //categories
-                  title('Categories', () {}),
+                  title('Categories', () {
+                    Get.to(const ViewCategoryList());
+                  }),
                   const CategoryList(),
+                  const WeatherCondition(),
+
                   const SizedBox(
-                    height: 10,
+                    // height: 10,
                   ),
                   //recommended product
                   title('Recommended Products', () {}),
                   const RecProductPage(),
-                  //Top selling product
-                  title('Top Selling Products', () {}),
-                  const TopSellingPage(),
-                  const WeatherCondition(),
-                  title('Manufacturers', () {}),
+                  title('Manufacturers', () {
+                    Get.to(const ViewManufacturer());
+                  }),
                   const ManuFactPage(),
                   const SizedBox(
                     height: 15,
@@ -157,8 +164,12 @@ class _HomePageState extends State<HomePage> {
                     place: "home_bottom",
                   ),
                   const SizedBox(
-                    height: 50,
+                    height: 20,
                   ),
+                  title('Top Selling Products', () {
+                  }),
+                  const TopSellingPage(),
+
                   // const OfferSlider(),
                   // const SizedBox(
                   //   height: 10,
@@ -283,19 +294,19 @@ class _HomePageState extends State<HomePage> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Row(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 title,
                 style: AppTextStyles.kBody15SemiboldTextStyle,
               ),
-              // TextButton(
-              //     onPressed: onTap,
-              //     child: Text(
-              //       'View All',
-              //       style: AppTextStyles.kCaption12RegularTextStyle
-              //           .copyWith(color: AppColors.primary),
-              //     )),
+              TextButton(
+                  onPressed: onTap,
+                  child: Text(
+                    'View All',
+                    style: AppTextStyles.kCaption12RegularTextStyle
+                        .copyWith(color: AppColors.primary),
+                  )),
             ],
           ),
         ),
