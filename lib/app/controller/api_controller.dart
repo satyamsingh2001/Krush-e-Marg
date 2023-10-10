@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../const/api_string.dart';
-import '../database/database_helper2.dart';
 
 Future<List<String>> loadStrings() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();

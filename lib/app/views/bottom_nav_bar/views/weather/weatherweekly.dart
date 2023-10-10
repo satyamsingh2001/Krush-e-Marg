@@ -131,7 +131,8 @@ class _WeatherWeekState extends State<WeatherWeek> {
                 ),
                 ConstantContainer(
                     height: Get.height*0.16,
-                    child:Obx(() =>weatherController.hourlyWeatherList.isEmpty?const Center(child: CircularProgressIndicator(color: AppColors.primary,)): NotificationListener<OverscrollIndicatorNotification>(
+                    child:Obx(() =>weatherController.hourlyWeatherList.isEmpty?const Center(child: CircularProgressIndicator(color: AppColors.primary,))
+                        : NotificationListener<OverscrollIndicatorNotification>(
                       onNotification: (notification) {
                         notification.disallowIndicator();
                         return true;

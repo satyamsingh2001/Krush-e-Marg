@@ -11,7 +11,8 @@ class CategoryList extends StatefulWidget {
   const CategoryList({Key? key}) : super(key: key);
 
   @override
-  _CategoryListState createState() => _CategoryListState();
+  State<CategoryList> createState() => _CategoryListState();
+
 }
 
 class _CategoryListState extends State<CategoryList> {
@@ -22,7 +23,7 @@ class _CategoryListState extends State<CategoryList> {
     // categoriesController.fetchCategories();
   }
 
-  CategoriesController categoriesController = Get.find();
+  final CategoriesController categoriesController = Get.find();
   final SubCatController subCatController = Get.find();
 
 
@@ -47,7 +48,6 @@ class _CategoryListState extends State<CategoryList> {
                     ? GestureDetector(
                   onTap: () {
                     subCatController.fetchSubCat(cat['id'].toString(),);
-
                     Get.to( ProductList(
                       catId: cat['id'].toString(),
 

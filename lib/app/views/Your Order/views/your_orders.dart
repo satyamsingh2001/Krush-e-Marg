@@ -38,19 +38,29 @@ class _YourOrderState extends State<YourOrder> {
         ),
         centerTitle: true,
       ),
-      body: GetBuilder<OrderApiController>(
-        builder: (orderApiController) {
+      body: GetBuilder<OrderApiController>(builder: (orderApiController) {
+        if (orderApiController.orderHistory.isEmpty) {
+          return const Center(
+            child: Text(
+              'No Order Found',
+              style: AppTextStyles.kBody17SemiboldTextStyle,
+            ),
+          );
+        } else {
           return ListView.builder(
-            physics: const BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               itemCount: orderApiController.orderHistory.length,
               itemBuilder: (BuildContext context, index) {
                 final order = orderApiController.orderHistory[index];
                 final String orderDate = order['order_date'].toString();
                 DateTime parsedDateTime = DateTime.parse(orderDate);
-                String formattedDateTime = DateFormat("dd MMM yyyy 'at' hh:mm a").format(parsedDateTime);
+                String formattedDateTime =
+                    DateFormat("dd MMM yyyy 'at' hh:mm a")
+                        .format(parsedDateTime);
                 List orderDetails = order['order_details'];
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
                   child: ContainerWidget(
                       child: Column(
                     children: [
@@ -69,14 +79,15 @@ class _YourOrderState extends State<YourOrder> {
                                   style: AppTextStyles.kBody17SemiboldTextStyle,
                                 ),
                                 Text(
-                                 // " order['store']['name'].toString()",
+                                  // " order['store']['name'].toString()",
                                   order['store']['name'].toString(),
                                   style: AppTextStyles.kBody15RegularTextStyle,
                                 ),
                                 Text(
                                   // "date",
-                                    formattedDateTime,
-                                  style: AppTextStyles.kCaption12RegularTextStyle
+                                  formattedDateTime,
+                                  style: AppTextStyles
+                                      .kCaption12RegularTextStyle
                                       .copyWith(color: AppColors.white60),
                                 ),
                               ],
@@ -89,7 +100,9 @@ class _YourOrderState extends State<YourOrder> {
                                     backgroundColor: Colors.white,
                                   ),
                                   onPressed: () {
-                                    Get.to(OrderDetails(order: order,));
+                                    Get.to(OrderDetails(
+                                      order: order,
+                                    ));
 
                                     // if (index == 0) {
                                     //   Get.to(TrackOrder(order: order,));
@@ -119,25 +132,44 @@ class _YourOrderState extends State<YourOrder> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              ConstColumn(title: 'Items', subtitle: orderDetails.length.toString(),),
-                              const VerticalDivider(thickness: 1,color: AppColors.white20,),
-                              ConstColumn(title: 'Total', subtitle:"₹${order['total_amount']}"),
-                              const VerticalDivider(thickness: 1,color: AppColors.white20,),
-                              ConstColumn(title: 'Payment', subtitle:order['payment_method'].toString()),
-                              const VerticalDivider(thickness: 1,color: AppColors.white20,),
+                              ConstColumn(
+                                title: 'Items',
+                                subtitle: orderDetails.length.toString(),
+                              ),
+                              const VerticalDivider(
+                                thickness: 1,
+                                color: AppColors.white20,
+                              ),
+                              ConstColumn(
+                                  title: 'Total',
+                                  subtitle: "₹${order['total_amount']}"),
+                              const VerticalDivider(
+                                thickness: 1,
+                                color: AppColors.white20,
+                              ),
+                              ConstColumn(
+                                  title: 'Payment',
+                                  subtitle: order['payment_method'].toString()),
+                              const VerticalDivider(
+                                thickness: 1,
+                                color: AppColors.white20,
+                              ),
                               SizedBox(
                                 height: 45,
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text(
                                       'Status',
-                                      style: AppTextStyles.kBody15SemiboldTextStyle,
+                                      style: AppTextStyles
+                                          .kBody15SemiboldTextStyle,
                                     ),
                                     Container(
                                         decoration: BoxDecoration(
                                           color: AppColors.white,
-                                          borderRadius: BorderRadius.circular(4),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
                                         ),
                                         child: const Padding(
                                           padding: EdgeInsets.all(5.0),
@@ -156,12 +188,11 @@ class _YourOrderState extends State<YourOrder> {
                         ),
                       ),
                     ],
-                  )
-                  ),
+                  )),
                 );
               });
         }
-      ),
+      }),
     );
   }
 }
@@ -169,7 +200,8 @@ class _YourOrderState extends State<YourOrder> {
 class ConstColumn extends StatelessWidget {
   final String title;
   final String subtitle;
-  const ConstColumn({Key? key, required this.title, required this.subtitle}) : super(key: key);
+  const ConstColumn({Key? key, required this.title, required this.subtitle})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -184,12 +216,10 @@ class ConstColumn extends StatelessWidget {
           ),
           Text(
             subtitle,
-            style:
-            AppTextStyles.kBody15RegularTextStyle,
+            style: AppTextStyles.kBody15RegularTextStyle,
           ),
         ],
       ),
     );
   }
 }
-

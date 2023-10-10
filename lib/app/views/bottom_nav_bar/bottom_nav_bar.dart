@@ -12,6 +12,7 @@ import 'community/controller/api.dart';
 import 'community/controller/toggle_controller.dart';
 import 'community/controller/update_ls_controller.dart';
 import 'shops/views/shope_page.dart';
+import 'views/weather/controller/weather_controller.dart';
 
 class DashBoardScreenMain extends StatefulWidget {
   final int? currentIndex;
@@ -27,6 +28,8 @@ class _DashBoardScreenMainState extends State<DashBoardScreenMain> {
   final ProductController productController = Get.put(ProductController());
   final UpdateLSController updateLSController = Get.put(UpdateLSController());
   final ToggleController toggleController = Get.put(ToggleController());
+  final WeatherController weatherController = Get.put(WeatherController());
+
   late int currentIndex;
 
 
@@ -34,6 +37,8 @@ class _DashBoardScreenMainState extends State<DashBoardScreenMain> {
   void initState() {
     super.initState();
     currentIndex = widget.currentIndex??0;
+    weatherController.fetchCurrentWeatherData();
+    weatherController.fetchHourlyWeather();
   }
  List screens = [
   const HomePage(),

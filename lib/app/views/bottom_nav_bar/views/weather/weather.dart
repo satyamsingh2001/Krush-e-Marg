@@ -27,13 +27,10 @@ class _WeatherConditionState extends State<WeatherCondition> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    weatherController.fetchCurrentWeatherData();
-    weatherController.fetchHourlyWeather();
-    locationController.requestLocationPermissions();
-    locationController.getCurrentLocation();
-
-    // print(weatherController.fetchCurrentWeatherData());
-    // print(locationController.getCurrentLocation);
+    // weatherController.fetchCurrentWeatherData();
+    // weatherController.fetchHourlyWeather();
+    // locationController.requestLocationPermissions();
+    // locationController.getCurrentLocation();
   }
 
   @override
@@ -60,16 +57,6 @@ class _WeatherConditionState extends State<WeatherCondition> {
                           style: AppTextStyles.kBody17SemiboldTextStyle
                               .copyWith(color: AppColors.white100),
                         )),
-
-                        // IconButton(
-                        //     onPressed: () {
-                        //       weatherController.fetchCurrentWeatherData();
-                        //     },
-                        //     icon: const Icon(
-                        //       CupertinoIcons.refresh,
-                        //       semanticLabel: "Refresh",
-                        //       color: AppColors.primary,
-                        //     )),
                       ],
                     ),
                     Row(
